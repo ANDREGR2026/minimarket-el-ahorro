@@ -29,6 +29,10 @@
             if (overlay) overlay.addEventListener('click', cerrar);
         })();
     </script>
+
+    <!-- Listas desplegables propias del sistema -->
+    <script src="<?= BASE_URL ?>assets/js/select.js"></script>
+
     <?php if (!empty($scripts)): ?>
         <?php foreach ((array) $scripts as $script): ?>
             <script src="<?= BASE_URL . $script ?>"></script>

@@ -12,7 +12,7 @@ require_once __DIR__ . '/menu.php';
 
 $titulo = $titulo ?? 'Minimarket';
 $activo = $activo ?? '';
-$rol    = Auth::rol();
+$__rolActual = Auth::rol();
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -43,7 +43,7 @@ $rol    = Auth::rol();
 
             <nav class="flex-1 space-y-1 overflow-y-auto px-3 py-4">
                 <?php foreach (menu_items() as $item): ?>
-                    <?php if (!in_array($rol, $item['roles'], true)) continue; ?>
+                    <?php if (!in_array($__rolActual, $item['roles'], true)) continue; ?>
                     <a href="<?= BASE_URL . $item['ruta'] ?>"
                         class="nav-item <?= $activo === $item['clave'] ? 'nav-item-activo' : '' ?>">
                         <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -61,7 +61,7 @@ $rol    = Auth::rol();
                     </span>
                     <div class="min-w-0 leading-tight">
                         <p class="truncate text-sm font-medium text-white"><?= e(Auth::nombre()) ?></p>
-                        <p class="text-[11px] text-slate-400"><?= e($rol) ?></p>
+                        <p class="text-[11px] text-slate-400"><?= e($__rolActual) ?></p>
                     </div>
                 </div>
                 <a href="<?= BASE_URL ?>logout"
