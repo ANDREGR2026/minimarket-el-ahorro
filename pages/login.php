@@ -45,13 +45,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="flex min-h-screen">
 
         <!-- Panel de presentación (solo en pantallas grandes) -->
-        <div class="relative hidden w-1/2 flex-col justify-between bg-marca-800 p-12 lg:flex">
-            <div class="flex items-center gap-3">
+        <div class="relative hidden w-1/2 flex-col justify-between overflow-hidden p-12 lg:flex">
+            <img src="<?= BASE_URL ?>assets/img/login-hero.jpg" alt=""
+                class="absolute inset-0 h-full w-full object-cover" style="object-position: 60% 50%;">
+            <div class="absolute inset-0"
+                style="background: linear-gradient(100deg, #1d63d8 28%, rgba(29,99,216,0.82) 55%, rgba(29,99,216,0.35) 100%);">
+            </div>
+
+            <div class="relative flex items-center gap-3">
                 <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-white/15 text-xl font-bold text-white">M</span>
                 <span class="text-lg font-semibold text-white">Minimarket El Ahorro</span>
             </div>
 
-            <div>
+            <div class="relative">
                 <h2 class="text-4xl leading-tight font-bold text-white">
                     Sistema Web para la<br>Gestión de un Minimarket
                 </h2>
@@ -60,19 +66,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     de gestión en una sola plataforma.
                 </p>
 
-                <div class="mt-10 grid max-w-md grid-cols-2 gap-4">
-                    <div class="rounded-xl bg-white/10 p-4">
-                        <p class="text-2xl font-bold text-white">POS</p>
-                        <p class="text-sm text-marca-100">Ventas con boleta y factura</p>
+                <div class="mt-9 grid max-w-md grid-cols-2 gap-3.5">
+                    <div class="flex flex-col gap-3 rounded-2xl bg-white/10 p-5">
+                        <svg width="22" height="22" class="shrink-0" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 9h12l-1.2 9.6a2 2 0 0 1-2 1.9H9.2a2 2 0 0 1-2-1.9L6 9Z" />
+                            <path d="M9 9V7a3 3 0 0 1 6 0v2" />
+                            <path d="M4 9h16" />
+                        </svg>
+                        <div>
+                            <p class="text-base font-bold text-white">POS</p>
+                            <p class="mt-0.5 text-xs text-marca-100">Ventas con boleta y factura</p>
+                        </div>
                     </div>
-                    <div class="rounded-xl bg-white/10 p-4">
-                        <p class="text-2xl font-bold text-white">Kardex</p>
-                        <p class="text-sm text-marca-100">Stock siempre actualizado</p>
+                    <div class="flex flex-col gap-3 rounded-2xl bg-white/10 p-5">
+                        <svg width="22" height="22" class="shrink-0" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3.5 7.5 12 3l8.5 4.5v9L12 21l-8.5-4.5v-9Z" />
+                            <path d="M3.5 7.5 12 12l8.5-4.5" />
+                            <path d="M12 12v9" />
+                        </svg>
+                        <div>
+                            <p class="text-base font-bold text-white">Kardex</p>
+                            <p class="mt-0.5 text-xs text-marca-100">Stock siempre actualizado</p>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <p class="text-sm text-marca-200">
+            <p class="relative text-sm text-marca-200">
                 Curso de Desarrollo de Sistemas de Información
             </p>
         </div>
