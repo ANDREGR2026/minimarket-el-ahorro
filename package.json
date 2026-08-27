@@ -1,0 +1,28 @@
+{
+  "name": "minimarket",
+  "version": "1.0.0",
+  "description": "Sistema Web para la Gestion de un Minimarket",
+  "directories": {
+    "doc": "docs",
+    "lib": "lib"
+  },
+  "scripts": {
+    "css": "tailwindcss -i ./assets/css/input.css -o ./assets/css/tailwind.css --minify",
+    "css:watch": "tailwindcss -i ./assets/css/input.css -o ./assets/css/tailwind.css --watch",
+    "docs": "node docs/generador/generar.js",
+    "docs:diagramas": "node docs/generador/render_diagramas.js",
+    "docs:capturas": "node docs/generador/capturas.js"
+  },
+  "type": "commonjs",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "docx": "^9.7.1",
+    "mermaid": "^11.17.2",
+    "puppeteer-core": "^25.9.0",
+    "tailwindcss": "^4.3.3"
+  },
+  "private": true,
+  "dependencies": {
+    "chart.js": "^4.5.1"
+  }
+}

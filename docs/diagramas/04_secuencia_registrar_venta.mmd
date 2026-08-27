@@ -1,0 +1,64 @@
+sequenceDiagram
+    autonumber
+    actor Cajero
+    participant POS as pos.js<br/>(navegador)
+    participant API as registrar_venta.php
+    participant VC as VentaController
+    participant MV as Venta (modelo)
+    participant BD as MySQL
+
+    Cajero->>POS: Escanea o busca productos
+    POS->>API: GET api/buscar_producto?codigo=...
+    API->>BD: SELECT producto activo
+    BD-->>API: Datos del producto
+    API-->>POS: JSON del producto
+    POS->>POS: Agrega al carrito y calcula IGV
+
+    Cajero->>POS: Presiona "Registrar venta" (F9)
+    POS->>API: POST carrito + tipo + cliente + pago
+
+    API->>API: Valida token CSRF y rol
+    API->>VC: registrar(carrito, datos, idUsuario)
+    VC->>VC: Consolida líneas repetidas
+    VC->>MV: registrar(items, datos)
+
+    MV->>BD: BEGIN TRANSACTION
+
+    loop Por cada producto del carrito
+        MV->>BD: SELECT ... FOR UPDATE (bloquea stock)
+        BD-->>MV: precio_venta y stock reales
+        alt Stock insuficiente
+            MV->>BD: ROLLBACK
+            MV-->>Cajero: Error "Stock insuficiente"
+        end
+    end
+
+    MV->>MV: total = Σ(precio × cantidad)
+    MV->>MV: subtotal = total / 1.18
+    MV->>MV: igv = total − subtotal
+
+    alt Pago en efectivo menor al total
+        MV->>BD: ROLLBACK
+        MV-->>Cajero: Error "Monto recibido insuficiente"
+    end
+
+    MV->>BD: SELECT serie FOR UPDATE
+    MV->>BD: UPDATE ultimo_correlativo + 1
+    MV->>BD: INSERT INTO ventas
+
+    loop Por cada línea
+        MV->>BD: INSERT INTO detalle_venta
+        MV->>BD: UPDATE productos SET stock = stock − cantidad
+        MV->>BD: INSERT INTO movimientos_inventario (SALIDA)
+    end
+
+    MV->>BD: COMMIT
+    BD-->>MV: Confirmado
+    MV-->>VC: {ok, id_venta, comprobante, total, vuelto}
+    VC-->>API: Resultado
+    API-->>POS: JSON con el número de comprobante
+    POS-->>Cajero: Muestra "Venta registrada" y el vuelto
+
+    Cajero->>POS: Presiona "Imprimir"
+    POS->>API: GET comprobante/{id}
+    API-->>Cajero: PDF del ticket (80 mm)
