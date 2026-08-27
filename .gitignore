@@ -1,0 +1,9 @@
+.env
+storage/comprobantes/*.pdf
+assets/img/productos/*
+!assets/img/productos/.gitkeep
+node_modules/
+vendor/
+*.log
+Thumbs.db
+desktop.ini

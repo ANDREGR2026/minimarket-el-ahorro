@@ -1,0 +1,153 @@
+@import "tailwindcss";
+
+/* Escanear todas las vistas PHP y scripts del proyecto en busca de clases */
+@source "../../pages";
+@source "../../components";
+@source "../../controllers";
+@source "../../api";
+@source "../../assets/js";
+@source "../../index.php";
+
+@theme {
+  --color-marca-50:  #eff8ff;
+  --color-marca-100: #dbeefe;
+  --color-marca-200: #bfe2fe;
+  --color-marca-300: #93d0fd;
+  --color-marca-400: #60b6fa;
+  --color-marca-500: #3b98f6;
+  --color-marca-600: #257aeb;
+  --color-marca-700: #1d63d8;
+  --color-marca-800: #1e51af;
+  --color-marca-900: #1e468a;
+  --color-marca-950: #172c54;
+
+  --font-sans: "Segoe UI", Inter, system-ui, -apple-system, sans-serif;
+}
+
+/* =====================================================================
+   Utilidades propias del sistema.
+   Se declaran con @utility para que Tailwind v4 permita reutilizarlas
+   desde otras reglas mediante @apply.
+   ===================================================================== */
+
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2
+         text-sm font-semibold transition focus:outline-none
+         focus:ring-2 focus:ring-offset-2 disabled:opacity-50
+         disabled:cursor-not-allowed;
+}
+
+@utility btn-primario {
+  @apply btn bg-marca-600 text-white hover:bg-marca-700 focus:ring-marca-500;
+}
+
+@utility btn-secundario {
+  @apply btn bg-white text-slate-700 ring-1 ring-slate-300 ring-inset
+         hover:bg-slate-50 focus:ring-slate-400;
+}
+
+@utility btn-peligro {
+  @apply btn bg-red-600 text-white hover:bg-red-700 focus:ring-red-500;
+}
+
+@utility btn-exito {
+  @apply btn bg-emerald-600 text-white hover:bg-emerald-700 focus:ring-emerald-500;
+}
+
+@utility btn-sm {
+  @apply px-2.5 py-1.5 text-xs;
+}
+
+/* ---------- Formularios ---------- */
+
+@utility campo {
+  @apply block w-full rounded-lg border-0 bg-white px-3 py-2 text-sm
+         text-slate-900 ring-1 ring-slate-300 ring-inset
+         placeholder:text-slate-400
+         focus:ring-2 focus:ring-marca-500 focus:outline-none;
+}
+
+@utility etiqueta {
+  @apply mb-1.5 block text-sm font-medium text-slate-700;
+}
+
+@utility ayuda-error {
+  @apply mt-1 text-xs font-medium text-red-600;
+}
+
+/* ---------- Tarjetas ---------- */
+
+@utility tarjeta {
+  @apply rounded-xl border border-slate-200 bg-white shadow-sm;
+}
+
+/* ---------- Etiquetas de estado ---------- */
+
+@utility badge {
+  @apply inline-flex items-center rounded-full px-2.5 py-0.5
+         text-xs font-medium;
+}
+
+@utility badge-verde { @apply badge bg-emerald-100 text-emerald-800; }
+@utility badge-rojo  { @apply badge bg-red-100 text-red-800; }
+@utility badge-ambar { @apply badge bg-amber-100 text-amber-800; }
+@utility badge-gris  { @apply badge bg-slate-100 text-slate-700; }
+@utility badge-azul  { @apply badge bg-marca-100 text-marca-800; }
+
+/* ---------- Navegacion lateral ---------- */
+
+@utility nav-item {
+  @apply flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm
+         font-medium text-slate-300 transition
+         hover:bg-slate-700/60 hover:text-white;
+}
+
+@utility nav-item-activo {
+  @apply bg-marca-600 text-white hover:bg-marca-600 hover:text-white;
+}
+
+/* ---------- Alertas ---------- */
+
+@utility alerta {
+  @apply flex items-start gap-3 rounded-lg border px-4 py-3 text-sm;
+}
+
+@utility alerta-error { @apply alerta border-red-200 bg-red-50 text-red-800; }
+@utility alerta-exito { @apply alerta border-emerald-200 bg-emerald-50 text-emerald-800; }
+@utility alerta-aviso { @apply alerta border-amber-200 bg-amber-50 text-amber-800; }
+
+/* =====================================================================
+   Estilos base de elementos
+   ===================================================================== */
+
+@layer components {
+  .tabla {
+    @apply w-full border-collapse text-sm;
+  }
+  .tabla thead th {
+    @apply border-b border-slate-200 bg-slate-50 px-4 py-3 text-left
+           text-xs font-semibold tracking-wide text-slate-600 uppercase;
+  }
+  .tabla tbody td {
+    @apply border-b border-slate-100 px-4 py-3 text-slate-700;
+  }
+  .tabla tbody tr:hover {
+    @apply bg-slate-50;
+  }
+}
+
+/* Ocultar las flechas de los inputs numericos */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Estilos aplicados solo al imprimir comprobantes y reportes */
+@media print {
+  .no-imprimir { display: none !important; }
+  body { background: #fff !important; }
+}

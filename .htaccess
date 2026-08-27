@@ -1,0 +1,34 @@
+# Sistema Web para la Gestion de un Minimarket
+# Reglas de URLs amigables
+
+RewriteEngine On
+RewriteBase /MINIMARKET/
+
+Options -Indexes
+
+# Bloquear acceso directo a archivos y carpetas internas
+RewriteRule ^(\.env|\.env\.example|\.gitignore) - [F,L]
+RewriteRule ^(database|models|controllers|middleware|components|lib|docs)/ - [F,L]
+
+# Autenticacion
+RewriteRule ^login/?$ pages/login.php [QSA,L]
+RewriteRule ^logout/?$ pages/logout.php [QSA,L]
+RewriteRule ^acceso-denegado/?$ pages/acceso_denegado.php [QSA,L]
+
+# Modulos principales
+RewriteRule ^dashboard/?$ pages/dashboard.php [QSA,L]
+RewriteRule ^pos/?$ pages/pos.php [QSA,L]
+RewriteRule ^productos/?$ pages/productos.php [QSA,L]
+RewriteRule ^categorias/?$ pages/categorias.php [QSA,L]
+RewriteRule ^inventario/?$ pages/inventario.php [QSA,L]
+RewriteRule ^kardex/([0-9]+)/?$ pages/kardex.php?id=$1 [QSA,L]
+RewriteRule ^clientes/?$ pages/clientes.php [QSA,L]
+RewriteRule ^ventas/?$ pages/ventas.php [QSA,L]
+RewriteRule ^venta/([0-9]+)/?$ pages/detalle_venta.php?id=$1 [QSA,L]
+RewriteRule ^comprobante/([0-9]+)/?$ pages/comprobante.php?id=$1 [QSA,L]
+RewriteRule ^reportes/?$ pages/reportes.php [QSA,L]
+RewriteRule ^usuarios/?$ pages/usuarios.php [QSA,L]
+RewriteRule ^exportar/?$ pages/exportar.php [QSA,L]
+
+# Endpoints internos (JSON) usados por el punto de venta
+RewriteRule ^api/([a-z_]+)/?$ api/$1.php [QSA,L]
