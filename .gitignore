@@ -4,6 +4,7 @@ assets/img/productos/*
 !assets/img/productos/.gitkeep
 node_modules/
 vendor/
+.phpunit.cache/
 *.log
 Thumbs.db
 desktop.ini
