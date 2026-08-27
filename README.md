@@ -17,7 +17,7 @@ clientes, y reportes de gestión.
 | Base de datos | MySQL 8.4 · InnoDB · utf8mb4 |
 | Acceso a datos | PDO con sentencias preparadas |
 | Interfaz | TailwindCSS 4 compilado localmente |
-| Interactividad | JavaScript nativo, sin librerías de terceros |
+| Interactividad | JavaScript nativo, sin librerías de terceros. Incluye un componente propio de lista desplegable |
 | Gráficos | Chart.js (servido desde el propio proyecto) |
 | PDF | FPDF |
 
@@ -121,7 +121,7 @@ MINIMARKET/
 ├── api/                    Endpoints JSON que consume el punto de venta
 ├── assets/
 │   ├── css/                input.css (fuente) y tailwind.css (compilado)
-│   ├── js/                 pos.js y chart.min.js
+│   ├── js/                 pos.js, select.js y chart.min.js
 │   └── img/productos/      Imágenes del catálogo
 ├── components/             Layout, menú lateral y mensajes reutilizables
 ├── controllers/            Reglas de negocio y validaciones

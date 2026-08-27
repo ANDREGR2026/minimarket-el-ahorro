@@ -71,6 +71,131 @@
   @apply mb-1.5 block text-sm font-medium text-slate-700;
 }
 
+/* ---------- Listas desplegables ---------- */
+
+@layer components {
+
+  /* Apariencia base del select nativo.
+     Se oculta la flecha del navegador, que queda pegada al borde, y se
+     dibuja una propia con espacio suficiente a su alrededor. */
+  select.campo {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-right: 2.5rem;
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1.1rem 1.1rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%2364748b'%3E%3Cpath fill-rule='evenodd' d='M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z' clip-rule='evenodd'/%3E%3C/svg%3E");
+    cursor: pointer;
+  }
+
+  select.campo:disabled {
+    @apply cursor-not-allowed bg-slate-50 text-slate-400;
+  }
+
+  /* Contenedor del componente propio.
+     El select nativo permanece en el documento como origen del valor: así
+     el formulario se envía igual y la validación del navegador funciona. */
+  .select-envoltura {
+    @apply relative;
+  }
+
+  .select-envoltura > select {
+    @apply pointer-events-none absolute inset-0 h-full w-full opacity-0;
+  }
+
+  /* Botón que reemplaza visualmente al select */
+  .select-boton {
+    @apply flex w-full cursor-pointer items-center justify-between gap-2
+           rounded-lg bg-white py-2 pr-3 pl-3 text-left text-sm
+           text-slate-900 ring-1 ring-slate-300 ring-inset
+           transition hover:ring-slate-400
+           focus:ring-2 focus:ring-marca-500 focus:outline-none;
+  }
+
+  .select-boton[aria-expanded="true"] {
+    @apply ring-2 ring-marca-500;
+  }
+
+  .select-boton[data-vacio="true"] .select-valor {
+    @apply text-slate-400;
+  }
+
+  .select-valor {
+    @apply min-w-0 flex-1 truncate;
+  }
+
+  .select-flecha {
+    @apply h-4 w-4 shrink-0 text-slate-400 transition-transform duration-150;
+  }
+
+  .select-boton[aria-expanded="true"] .select-flecha {
+    @apply rotate-180 text-marca-600;
+  }
+
+  /* Panel desplegable */
+  .select-panel {
+    @apply absolute z-50 mt-1.5 w-full overflow-hidden rounded-lg border
+           border-slate-200 bg-white shadow-lg;
+  }
+
+  .select-panel[hidden] {
+    display: none;
+  }
+
+  .select-panel-arriba {
+    @apply top-auto bottom-full mt-0 mb-1.5;
+  }
+
+  .select-buscador {
+    @apply border-b border-slate-100 p-2;
+  }
+
+  .select-buscador input {
+    @apply w-full rounded-md border-0 bg-slate-50 px-2.5 py-1.5 text-sm
+           text-slate-900 placeholder:text-slate-400
+           focus:bg-white focus:ring-2 focus:ring-marca-500 focus:outline-none;
+  }
+
+  .select-lista {
+    @apply max-h-60 overflow-y-auto py-1;
+  }
+
+  .select-opcion {
+    @apply flex cursor-pointer items-center justify-between gap-2
+           px-3 py-2 text-sm text-slate-700;
+  }
+
+  .select-opcion[data-activa="true"] {
+    @apply bg-slate-100;
+  }
+
+  .select-opcion[aria-selected="true"] {
+    @apply bg-marca-50 font-medium text-marca-700;
+  }
+
+  .select-opcion[aria-disabled="true"] {
+    @apply cursor-not-allowed text-slate-300;
+  }
+
+  .select-opcion-texto {
+    @apply min-w-0 flex-1 truncate;
+  }
+
+  .select-check {
+    @apply h-4 w-4 shrink-0 text-marca-600 opacity-0;
+  }
+
+  .select-opcion[aria-selected="true"] .select-check {
+    @apply opacity-100;
+  }
+
+  .select-sin-resultados {
+    @apply px-3 py-6 text-center text-sm text-slate-400;
+  }
+}
+
 @utility ayuda-error {
   @apply mt-1 text-xs font-medium text-red-600;
 }

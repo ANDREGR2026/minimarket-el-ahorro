@@ -420,6 +420,8 @@
         quitarCliente();
         el.montoPagado.value = '0.00';
         el.metodoPago.value = 'EFECTIVO';
+        // Avisar del cambio para que vuelva a mostrarse el bloque de efectivo
+        el.metodoPago.dispatchEvent(new Event('change', { bubbles: true }));
         document.querySelector('input[value="BOLETA"]').checked = true;
         marcarTipo();
         el.modalExito.classList.replace('flex', 'hidden');
