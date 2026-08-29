@@ -132,6 +132,64 @@ class AuthTest extends TestCase
         $this->assertFalse(Auth::esAdministrador());
     }
 
+    public function test_es_administrador_verdadero_para_superadministrador(): void
+    {
+        $_SESSION['usuario'] = [
+            'id_usuario' => 1, 'nombre' => 'Super',
+            'usuario' => 'superadmin', 'rol' => 'SuperAdministrador',
+        ];
+        $this->assertTrue(Auth::esAdministrador());
+    }
+
+    // ─── esSuperAdministrador() ────────────────────────────────────────
+
+    public function test_es_super_administrador_verdadero(): void
+    {
+        $_SESSION['usuario'] = [
+            'id_usuario' => 1, 'nombre' => 'Super',
+            'usuario' => 'superadmin', 'rol' => 'SuperAdministrador',
+        ];
+        $this->assertTrue(Auth::esSuperAdministrador());
+    }
+
+    public function test_es_super_administrador_falso_para_administrador(): void
+    {
+        $_SESSION['usuario'] = [
+            'id_usuario' => 1, 'nombre' => 'Admin',
+            'usuario' => 'admin', 'rol' => 'Administrador',
+        ];
+        $this->assertFalse(Auth::esSuperAdministrador());
+    }
+
+    // ─── tieneRolPermitido() ─────────────────────────────────────────
+
+    public function test_tiene_rol_permitido_superadministrador_hereda_administrador(): void
+    {
+        $_SESSION['usuario'] = [
+            'id_usuario' => 1, 'nombre' => 'Super',
+            'usuario' => 'superadmin', 'rol' => 'SuperAdministrador',
+        ];
+        $this->assertTrue(Auth::tieneRolPermitido(['Administrador']));
+    }
+
+    public function test_tiene_rol_permitido_cajero_no_entra_a_solo_administrador(): void
+    {
+        $_SESSION['usuario'] = [
+            'id_usuario' => 2, 'nombre' => 'Cajero',
+            'usuario' => 'cajero', 'rol' => 'Cajero',
+        ];
+        $this->assertFalse(Auth::tieneRolPermitido(['Administrador']));
+    }
+
+    public function test_tiene_rol_permitido_coincidencia_directa(): void
+    {
+        $_SESSION['usuario'] = [
+            'id_usuario' => 2, 'nombre' => 'Cajero',
+            'usuario' => 'cajero', 'rol' => 'Cajero',
+        ];
+        $this->assertTrue(Auth::tieneRolPermitido(['Administrador', 'Cajero']));
+    }
+
     // ─── logout() ────────────────────────────────────────────────────
 
     public function test_logout_limpia_sesion(): void

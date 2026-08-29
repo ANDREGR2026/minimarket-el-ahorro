@@ -218,6 +218,7 @@
 @utility badge-ambar { @apply badge bg-amber-100 text-amber-800; }
 @utility badge-gris  { @apply badge bg-slate-100 text-slate-700; }
 @utility badge-azul  { @apply badge bg-marca-100 text-marca-800; }
+@utility badge-morado { @apply badge bg-violet-100 text-violet-800; }
 
 /* ---------- Navegacion lateral ---------- */
 

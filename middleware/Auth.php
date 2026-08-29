@@ -6,7 +6,9 @@ if (session_status() === PHP_SESSION_NONE) {
 
 /**
  * Control de acceso por sesión y por rol.
- * Roles del sistema: Administrador y Cajero.
+ * Roles del sistema: SuperAdministrador, Administrador y Cajero.
+ * SuperAdministrador es un rol único y fijo (creado por seed) que hereda
+ * todo lo que puede ver y hacer un Administrador.
  */
 class Auth
 {
@@ -22,6 +24,23 @@ class Auth
     }
 
     /**
+     * Indica si el rol de sesión cumple con alguno de los roles permitidos.
+     * SuperAdministrador siempre cumple donde se permite Administrador.
+     *
+     * @param array $rolesPermitidos por ejemplo ['Administrador']
+     */
+    public static function tieneRolPermitido($rolesPermitidos = [])
+    {
+        $rol = self::rol();
+
+        if ($rol === 'SuperAdministrador' && in_array('Administrador', $rolesPermitidos, true)) {
+            return true;
+        }
+
+        return in_array($rol, $rolesPermitidos, true);
+    }
+
+    /**
      * Exige que el usuario tenga uno de los roles permitidos.
      *
      * @param array $rolesPermitidos por ejemplo ['Administrador']
@@ -30,7 +49,7 @@ class Auth
     {
         self::check();
 
-        if (!in_array(self::rol(), $rolesPermitidos, true)) {
+        if (!self::tieneRolPermitido($rolesPermitidos)) {
             header('Location: ' . BASE_URL . 'acceso-denegado');
             exit;
         }
@@ -58,7 +77,12 @@ class Auth
 
     public static function esAdministrador()
     {
-        return self::rol() === 'Administrador';
+        return in_array(self::rol(), ['Administrador', 'SuperAdministrador'], true);
+    }
+
+    public static function esSuperAdministrador()
+    {
+        return self::rol() === 'SuperAdministrador';
     }
 
     public static function invitado()

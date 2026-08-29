@@ -118,6 +118,24 @@ class LoginControllerTest extends TestCase
         $this->assertSame('Administrador', $_SESSION['usuario']['rol']);
     }
 
+    public function test_autenticar_superadministrador_destino_dashboard(): void
+    {
+        $mock = $this->createMock(Usuario::class);
+        $mock->method('obtenerPorUsuario')->willReturn([
+            'id_usuario' => 9,
+            'nombre'     => 'Super Administrador',
+            'usuario'    => 'superadmin',
+            'password'   => password_hash('super123', PASSWORD_DEFAULT),
+            'rol'        => 'SuperAdministrador',
+        ]);
+
+        $controller = $this->crearController($mock);
+        $resultado  = $controller->autenticar('superadmin', 'super123');
+
+        $this->assertTrue($resultado['ok']);
+        $this->assertSame('dashboard', $resultado['destino']);
+    }
+
     public function test_autenticar_cajero_destino_pos(): void
     {
         $mock = $this->createMock(Usuario::class);

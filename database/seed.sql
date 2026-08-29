@@ -4,8 +4,9 @@
 -- Ejecutar DESPUES de schema.sql
 --
 -- Credenciales de acceso:
---   Administrador -> usuario: admin    contrasena: admin123
---   Cajero        -> usuario: cajero   contrasena: cajero123
+--   SuperAdministrador -> usuario: superadmin  contrasena: super123
+--   Administrador      -> usuario: admin       contrasena: admin123
+--   Cajero              -> usuario: cajero      contrasena: cajero123
 -- =====================================================================
 
 USE minimarket;
@@ -15,7 +16,7 @@ USE minimarket;
 -- ---------------------------------------------------------------------
 INSERT INTO configuracion (clave, valor, descripcion) VALUES
 ('razon_social', 'MINIMARKET EL AHORRO S.A.C.', 'Nombre legal del negocio'),
-('nombre_comercial', 'Minimarket El Ahorro',     'Nombre comercial mostrado en el sistema'),
+('nombre_comercial', 'EL AHORRO',               'Nombre comercial mostrado en el sistema'),
 ('ruc',          '20558877991',                  'RUC del negocio'),
 ('direccion',    'Av. Los Proceres 458, Lima',   'Direccion fiscal'),
 ('telefono',     '01 4567890',                   'Telefono de contacto'),
@@ -26,6 +27,7 @@ INSERT INTO configuracion (clave, valor, descripcion) VALUES
 -- Usuarios
 -- ---------------------------------------------------------------------
 INSERT INTO usuarios (nombre, usuario, password, rol, estado) VALUES
+('Super Administrador',  'superadmin', '$2y$10$GrD8fi73ASx43v7d0yiawu08SUw6s/CPc65bGXjEU93iBv5NW2ft2', 'SuperAdministrador', 1),
 ('Andre Gutierrez Rojas', 'admin',  '$2y$10$/2UWllHyHOyQ8VlTBSZqIuGPnRYaX3T2y7yyfU7yD2dxqPcuKVTb2', 'Administrador', 1),
 ('Lucia Ramos Peralta',   'cajero', '$2y$10$RM8/FmBegI8rJg9KidMa2ewcm6FiwrvUWGwpEtKk9idMnx0j80bPu', 'Cajero', 1);
 

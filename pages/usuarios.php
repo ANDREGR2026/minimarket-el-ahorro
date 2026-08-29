@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $accion = $_POST['accion'] ?? '';
 
     if ($accion === 'guardar') {
-        $resultado = $controlador->guardar($_POST);
+        $resultado = $controlador->guardar($_POST, Auth::rol());
     } elseif ($accion === 'estado') {
         $resultado = $controlador->cambiarEstado(
             $_POST['id_usuario'] ?? 0,
@@ -58,6 +58,9 @@ require __DIR__ . '/../components/layout_inicio.php';
             <label for="rol" class="etiqueta">Rol</label>
             <select id="rol" name="rol" class="campo w-40">
                 <option value="">Todos</option>
+                <?php if (Auth::esSuperAdministrador()): ?>
+                    <option value="SuperAdministrador" <?= $rol === 'SuperAdministrador' ? 'selected' : '' ?>>SuperAdministrador</option>
+                <?php endif; ?>
                 <option value="Administrador" <?= $rol === 'Administrador' ? 'selected' : '' ?>>Administrador</option>
                 <option value="Cajero" <?= $rol === 'Cajero' ? 'selected' : '' ?>>Cajero</option>
             </select>
@@ -99,7 +102,14 @@ require __DIR__ . '/../components/layout_inicio.php';
                         </td>
                         <td class="font-mono text-xs text-slate-500"><?= e($usuario['usuario']) ?></td>
                         <td class="text-center">
-                            <span class="<?= $usuario['rol'] === 'Administrador' ? 'badge-azul' : 'badge-gris' ?>">
+                            <?php
+                            $claseRol = match ($usuario['rol']) {
+                                'SuperAdministrador' => 'badge-morado',
+                                'Administrador'       => 'badge-azul',
+                                default               => 'badge-gris',
+                            };
+                            ?>
+                            <span class="<?= $claseRol ?>">
                                 <?= e($usuario['rol']) ?>
                             </span>
                         </td>
@@ -112,22 +122,28 @@ require __DIR__ . '/../components/layout_inicio.php';
                             <?php endif; ?>
                         </td>
                         <td class="text-right whitespace-nowrap">
-                            <button type="button" class="btn-secundario btn-sm"
-                                onclick='editar(<?= json_encode($usuario, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'>
-                                Editar
-                            </button>
+                            <?php if ($usuario['rol'] === 'SuperAdministrador'): ?>
+                                <span class="text-xs text-slate-400">Cuenta fija</span>
+                            <?php elseif ($usuario['rol'] === 'Administrador' && !Auth::esSuperAdministrador() && (int) $usuario['id_usuario'] !== Auth::id()): ?>
+                                <span class="text-xs text-slate-400">Solo el SuperAdministrador puede editarlo</span>
+                            <?php else: ?>
+                                <button type="button" class="btn-secundario btn-sm"
+                                    onclick='editar(<?= json_encode($usuario, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'>
+                                    Editar
+                                </button>
 
-                            <?php if ((int) $usuario['id_usuario'] !== Auth::id()): ?>
-                                <form method="POST" action="<?= BASE_URL ?>usuarios" class="inline">
-                                    <?= csrf_field() ?>
-                                    <input type="hidden" name="accion" value="estado">
-                                    <input type="hidden" name="id_usuario" value="<?= (int) $usuario['id_usuario'] ?>">
-                                    <input type="hidden" name="estado" value="<?= (int) $usuario['estado'] === 1 ? 0 : 1 ?>">
-                                    <button type="submit"
-                                        class="<?= (int) $usuario['estado'] === 1 ? 'btn-peligro' : 'btn-exito' ?> btn-sm">
-                                        <?= (int) $usuario['estado'] === 1 ? 'Desactivar' : 'Activar' ?>
-                                    </button>
-                                </form>
+                                <?php if ((int) $usuario['id_usuario'] !== Auth::id()): ?>
+                                    <form method="POST" action="<?= BASE_URL ?>usuarios" class="inline">
+                                        <?= csrf_field() ?>
+                                        <input type="hidden" name="accion" value="estado">
+                                        <input type="hidden" name="id_usuario" value="<?= (int) $usuario['id_usuario'] ?>">
+                                        <input type="hidden" name="estado" value="<?= (int) $usuario['estado'] === 1 ? 0 : 1 ?>">
+                                        <button type="submit"
+                                            class="<?= (int) $usuario['estado'] === 1 ? 'btn-peligro' : 'btn-exito' ?> btn-sm">
+                                            <?= (int) $usuario['estado'] === 1 ? 'Desactivar' : 'Activar' ?>
+                                        </button>
+                                    </form>
+                                <?php endif; ?>
                             <?php endif; ?>
                         </td>
                     </tr>
@@ -177,8 +193,15 @@ require __DIR__ . '/../components/layout_inicio.php';
                     <label for="rol-form" class="etiqueta">Rol <span class="text-red-500">*</span></label>
                     <select id="rol-form" name="rol" class="campo" required>
                         <option value="Cajero">Cajero — solo punto de venta y consultas</option>
-                        <option value="Administrador">Administrador — acceso total</option>
+                        <?php if (Auth::esSuperAdministrador()): ?>
+                            <option value="Administrador">Administrador — acceso total</option>
+                        <?php endif; ?>
                     </select>
+                    <?php if (!Auth::esSuperAdministrador()): ?>
+                        <p class="mt-1 text-xs text-slate-400">
+                            Solo el SuperAdministrador puede crear cuentas Administrador.
+                        </p>
+                    <?php endif; ?>
                 </div>
 
                 <div id="bloque-estado" class="hidden">

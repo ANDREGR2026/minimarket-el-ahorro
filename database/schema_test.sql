@@ -7,7 +7,7 @@ CREATE TABLE usuarios (
     nombre       VARCHAR(100)  NOT NULL,
     usuario      VARCHAR(50)   NOT NULL,
     password     VARCHAR(255)  NOT NULL,
-    rol          ENUM('Administrador','Cajero') NOT NULL DEFAULT 'Cajero',
+    rol          ENUM('SuperAdministrador','Administrador','Cajero') NOT NULL DEFAULT 'Cajero',
     estado       TINYINT(1)    NOT NULL DEFAULT 1,
     created_at   TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at   TIMESTAMP     NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,

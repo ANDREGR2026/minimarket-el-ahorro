@@ -34,9 +34,6 @@ class ReporteController
         return [
             'indicadores'   => $indicadores,
             'catalogo'      => $catalogo,
-            'ventasDia'     => $this->reporte->ventasPorDia(7),
-            'masVendidos'   => $this->reporte->productosMasVendidos(null, null, 8),
-            'porCategoria'  => $this->reporte->ventasPorCategoria(),
             'stockBajo'     => $this->productos->stockBajo(8),
             'ultimasVentas' => $this->reporte->ultimasVentas(8),
         ];

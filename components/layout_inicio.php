@@ -9,10 +9,12 @@
  */
 
 require_once __DIR__ . '/menu.php';
+require_once __DIR__ . '/../models/Configuracion.php';
 
 $titulo = $titulo ?? 'Minimarket';
 $activo = $activo ?? '';
 $__rolActual = Auth::rol();
+$__nombreComercial = (new Configuracion())->obtener('nombre_comercial', 'EL AHORRO');
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -20,7 +22,7 @@ $__rolActual = Auth::rol();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= e($titulo) ?> · Minimarket El Ahorro</title>
+    <title><?= e($titulo) ?> · <?= e($__nombreComercial) ?></title>
     <link rel="icon" href="<?= BASE_URL ?>assets/img/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/tailwind.css">
 </head>
@@ -34,16 +36,16 @@ $__rolActual = Auth::rol();
             class="fixed inset-y-0 left-0 z-40 flex w-64 -translate-x-full flex-col bg-slate-900 transition-transform lg:translate-x-0 no-imprimir">
 
             <div class="flex h-16 items-center gap-2.5 border-b border-slate-700/60 px-5">
-                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-marca-600 text-lg font-bold text-white">M</span>
+                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-marca-600 text-lg font-bold text-white">A</span>
                 <div class="leading-tight">
-                    <p class="text-sm font-semibold text-white">El Ahorro</p>
+                    <p class="text-sm font-semibold text-white"><?= e($__nombreComercial) ?></p>
                     <p class="text-[11px] text-slate-400">Sistema de gestión</p>
                 </div>
             </div>
 
             <nav class="flex-1 space-y-1 overflow-y-auto px-3 py-4">
                 <?php foreach (menu_items() as $item): ?>
-                    <?php if (!in_array($__rolActual, $item['roles'], true)) continue; ?>
+                    <?php if (!Auth::tieneRolPermitido($item['roles'])) continue; ?>
                     <a href="<?= BASE_URL . $item['ruta'] ?>"
                         class="nav-item <?= $activo === $item['clave'] ? 'nav-item-activo' : '' ?>">
                         <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -96,7 +98,7 @@ $__rolActual = Auth::rol();
 
                 <div class="hidden text-right text-xs leading-tight text-slate-500 sm:block">
                     <p class="font-medium text-slate-700"><?= e(ucfirst(strftime_es())) ?></p>
-                    <p>Minimarket El Ahorro</p>
+                    <p><?= e($__nombreComercial) ?></p>
                 </div>
             </header>
 

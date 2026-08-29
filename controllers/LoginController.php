@@ -46,7 +46,7 @@ class LoginController
             'rol'        => $registro['rol'],
         ];
 
-        $destino = $registro['rol'] === 'Administrador' ? 'dashboard' : 'pos';
+        $destino = Auth::esAdministrador() ? 'dashboard' : 'pos';
 
         return ['ok' => true, 'mensaje' => '', 'destino' => $destino];
     }
