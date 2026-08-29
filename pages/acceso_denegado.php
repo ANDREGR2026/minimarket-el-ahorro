@@ -17,7 +17,7 @@ $nombreComercial = (new Configuracion())->obtener('nombre_comercial', 'EL AHORRO
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Acceso denegado · <?= e($nombreComercial) ?></title>
     <link rel="icon" href="<?= BASE_URL ?>assets/img/favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/tailwind.css">
+    <link rel="stylesheet" href="<?= asset_url('assets/css/tailwind.css') ?>">
 </head>
 
 <body class="flex min-h-screen items-center justify-center bg-slate-100 p-6 font-sans">

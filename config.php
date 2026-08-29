@@ -59,6 +59,19 @@ function e($valor)
 }
 
 /**
+ * URL de un archivo estático con la fecha de modificación como parámetro,
+ * para que el navegador pida la versión nueva apenas cambia el archivo
+ * (evita tener que forzar recarga cuando se actualiza el CSS/JS).
+ */
+function asset_url($rutaRelativa)
+{
+    $rutaAbsoluta = ROOT_PATH . '/' . ltrim($rutaRelativa, '/');
+    $version      = file_exists($rutaAbsoluta) ? filemtime($rutaAbsoluta) : time();
+
+    return BASE_URL . $rutaRelativa . '?v=' . $version;
+}
+
+/**
  * Formatea un monto como moneda peruana.
  */
 function money($monto)

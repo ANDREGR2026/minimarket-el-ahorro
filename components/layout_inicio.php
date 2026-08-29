@@ -24,7 +24,7 @@ $__nombreComercial = (new Configuracion())->obtener('nombre_comercial', 'EL AHOR
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= e($titulo) ?> · <?= e($__nombreComercial) ?></title>
     <link rel="icon" href="<?= BASE_URL ?>assets/img/favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/tailwind.css">
+    <link rel="stylesheet" href="<?= asset_url('assets/css/tailwind.css') ?>">
 </head>
 
 <body class="min-h-screen bg-slate-100 font-sans text-slate-800">
