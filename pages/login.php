@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar sesión · <?= e($nombreComercial) ?></title>
     <link rel="icon" href="<?= BASE_URL ?>assets/img/favicon.svg" type="image/svg+xml">
-    <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/tailwind.css">
+    <link rel="stylesheet" href="<?= asset_url('assets/css/tailwind.css') ?>">
 </head>
 
 <body class="min-h-screen bg-slate-900 font-sans">
