@@ -66,6 +66,10 @@ require __DIR__ . '/../components/layout_inicio.php';
 
 <?php require __DIR__ . '/../components/flash.php'; ?>
 
+<p class="mb-4 text-sm text-slate-500">
+    <?= Auth::esAdministrador() ? 'Historial de comprobantes emitidos y anulados.' : 'Historial de sus comprobantes emitidos.' ?>
+</p>
+
 <form method="GET" action="<?= BASE_URL ?>ventas" class="mb-5 flex flex-wrap items-end gap-2">
     <div>
         <label for="desde" class="etiqueta">Desde</label>

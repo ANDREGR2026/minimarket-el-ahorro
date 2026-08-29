@@ -40,6 +40,8 @@ require __DIR__ . '/../components/layout_inicio.php';
 
 <?php require __DIR__ . '/../components/flash.php'; ?>
 
+<p class="mb-4 text-sm text-slate-500">Organización del catálogo. Cada producto pertenece a una categoría.</p>
+
 <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
     <form method="GET" action="<?= BASE_URL ?>categorias" class="flex gap-2">
         <input type="search" name="q" value="<?= e($busqueda) ?>"
@@ -83,7 +85,16 @@ require __DIR__ . '/../components/layout_inicio.php';
                     <tr>
                         <td class="font-medium text-slate-800"><?= e($categoria['nombre']) ?></td>
                         <td class="text-slate-500"><?= e($categoria['descripcion'] ?: '—') ?></td>
-                        <td class="text-center"><?= (int) $categoria['total_productos'] ?></td>
+                        <td class="text-center">
+                            <?php if ((int) $categoria['total_productos'] > 0): ?>
+                                <a href="<?= BASE_URL ?>productos?categoria=<?= (int) $categoria['id_categoria'] ?>"
+                                    class="font-medium text-marca-600 hover:text-marca-700">
+                                    <?= (int) $categoria['total_productos'] ?>
+                                </a>
+                            <?php else: ?>
+                                <span class="text-slate-400">0</span>
+                            <?php endif; ?>
+                        </td>
                         <td class="text-center">
                             <?php if ((int) $categoria['estado'] === 1): ?>
                                 <span class="badge-verde">Activa</span>

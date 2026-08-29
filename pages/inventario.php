@@ -58,6 +58,10 @@ require __DIR__ . '/../components/layout_inicio.php';
 
 <?php require __DIR__ . '/../components/flash.php'; ?>
 
+<?php if (!$productoFiltro): ?>
+    <p class="mb-4 text-sm text-slate-500">Entradas, salidas y ajustes de stock. Toda variación queda registrada.</p>
+<?php endif; ?>
+
 <?php if ($productoFiltro): ?>
     <div class="mb-5">
         <a href="<?= BASE_URL ?>productos" class="text-sm font-medium text-marca-600 hover:text-marca-700">
@@ -116,7 +120,7 @@ require __DIR__ . '/../components/layout_inicio.php';
         <div class="border-b border-slate-200 px-5 py-4">
             <h2 class="font-semibold text-slate-800">Registrar movimiento</h2>
             <p class="mt-0.5 text-xs text-slate-500">
-                Toda variación de stock queda registrada en el kardex.
+                Entrada, salida o ajuste — elija el tipo y el motivo.
             </p>
         </div>
 
