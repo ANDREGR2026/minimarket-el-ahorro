@@ -145,6 +145,81 @@ class UsuarioControllerTest extends TestCase
         ]);
     }
 
+    // ─── Restricción de rol por actor ──────────────────────────────────
+
+    public function test_guardar_administrador_actor_no_puede_crear_administrador(): void
+    {
+        $mock = $this->createMock(Usuario::class);
+        $mock->method('usuarioExiste')->willReturn(false);
+        $mock->expects($this->once())->method('crear')
+             ->with('Juan', 'juan.perez', $this->anything(), 'Cajero');
+
+        $controller = $this->crearController($mock);
+        $controller->guardar([
+            'nombre' => 'Juan', 'usuario' => 'juan.perez', 'password' => 'clave123', 'rol' => 'Administrador',
+        ], 'Administrador');
+    }
+
+    public function test_guardar_superadministrador_actor_si_puede_crear_administrador(): void
+    {
+        $mock = $this->createMock(Usuario::class);
+        $mock->method('usuarioExiste')->willReturn(false);
+        $mock->expects($this->once())->method('crear')
+             ->with('Juan', 'juan.perez', $this->anything(), 'Administrador');
+
+        $controller = $this->crearController($mock);
+        $controller->guardar([
+            'nombre' => 'Juan', 'usuario' => 'juan.perez', 'password' => 'clave123', 'rol' => 'Administrador',
+        ], 'SuperAdministrador');
+    }
+
+    public function test_guardar_nadie_puede_crear_superadministrador(): void
+    {
+        $mock = $this->createMock(Usuario::class);
+        $mock->method('usuarioExiste')->willReturn(false);
+        $mock->expects($this->once())->method('crear')
+             ->with('Juan', 'juan.perez', $this->anything(), 'Cajero');
+
+        $controller = $this->crearController($mock);
+        $controller->guardar([
+            'nombre' => 'Juan', 'usuario' => 'juan.perez', 'password' => 'clave123', 'rol' => 'SuperAdministrador',
+        ], 'SuperAdministrador');
+    }
+
+    public function test_guardar_rechaza_editar_cuenta_superadministrador(): void
+    {
+        $mock = $this->createMock(Usuario::class);
+        $mock->method('obtenerPorId')->willReturn(['id_usuario' => 9, 'rol' => 'SuperAdministrador']);
+        $mock->expects($this->never())->method('actualizar');
+
+        $controller = $this->crearController($mock);
+        $resultado  = $controller->guardar([
+            'id_usuario' => 9, 'nombre' => 'Nuevo Nombre', 'usuario' => 'superadmin',
+            'password' => '', 'rol' => 'Cajero', 'estado' => 1,
+        ], 'SuperAdministrador');
+
+        $this->assertFalse($resultado['ok']);
+        $this->assertStringContainsString('SuperAdministrador', $resultado['mensaje']);
+    }
+
+    public function test_guardar_administrador_actor_no_degrada_a_otro_administrador(): void
+    {
+        $mock = $this->createMock(Usuario::class);
+        $mock->method('obtenerPorId')->willReturn(['id_usuario' => 5, 'rol' => 'Administrador']);
+        $mock->method('usuarioExiste')->willReturn(false);
+        $mock->method('contarAdministradoresActivos')->willReturn(2);
+        $mock->expects($this->once())->method('actualizar')
+             ->with(5, 'Otro Admin', 'otro.admin', 'Administrador', 1, '');
+
+        $controller = $this->crearController($mock);
+        $resultado  = $controller->guardar([
+            'id_usuario' => 5, 'nombre' => 'Otro Admin', 'usuario' => 'otro.admin',
+            'password' => '', 'rol' => 'Cajero', 'estado' => 1,
+        ], 'Administrador');
+
+        $this->assertTrue($resultado['ok']);
+    }
+
     // ─── Actualización ───────────────────────────────────────────────
 
     public function test_guardar_actualizar_sin_cambiar_contrasena(): void
@@ -219,6 +294,19 @@ class UsuarioControllerTest extends TestCase
 
         $this->assertFalse($resultado['ok']);
         $this->assertStringContainsString('administrador activo', $resultado['mensaje']);
+    }
+
+    public function test_cambiar_estado_rechaza_cuenta_superadministrador(): void
+    {
+        $mock = $this->createMock(Usuario::class);
+        $mock->method('obtenerPorId')->willReturn(['id_usuario' => 9, 'rol' => 'SuperAdministrador']);
+        $mock->expects($this->never())->method('cambiarEstado');
+
+        $controller = $this->crearController($mock);
+        $resultado  = $controller->cambiarEstado(9, 0, 2);
+
+        $this->assertFalse($resultado['ok']);
+        $this->assertStringContainsString('SuperAdministrador', $resultado['mensaje']);
     }
 
     public function test_cambiar_estado_activar_exitoso(): void

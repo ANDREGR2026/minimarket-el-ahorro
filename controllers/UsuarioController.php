@@ -3,7 +3,8 @@
 require_once __DIR__ . '/../models/Usuario.php';
 
 /**
- * Mantenimiento de los usuarios del sistema. Solo accesible al Administrador.
+ * Mantenimiento de los usuarios del sistema. Accesible a Administrador y
+ * SuperAdministrador; solo este último puede conceder el rol Administrador.
  */
 class UsuarioController
 {
@@ -24,14 +25,41 @@ class UsuarioController
         return $this->modelo->obtenerPorId($id);
     }
 
-    public function guardar($datos)
+    /**
+     * @param array  $datos     datos del formulario
+     * @param string $rolActor  rol de quien realiza la operación; solo un
+     *                          SuperAdministrador puede conceder el rol Administrador.
+     *                          Nadie puede conceder SuperAdministrador desde aquí.
+     */
+    public function guardar($datos, $rolActor = 'SuperAdministrador')
     {
         $id       = !empty($datos['id_usuario']) ? (int) $datos['id_usuario'] : null;
         $nombre   = trim($datos['nombre'] ?? '');
         $usuario  = trim($datos['usuario'] ?? '');
         $password = $datos['password'] ?? '';
-        $rol      = ($datos['rol'] ?? 'Cajero') === 'Administrador' ? 'Administrador' : 'Cajero';
+        $rolSolicitado = $datos['rol'] ?? 'Cajero';
         $estado   = isset($datos['estado']) ? (int) $datos['estado'] : 1;
+
+        $existente = null;
+
+        if ($id !== null) {
+            $existente = $this->modelo->obtenerPorId($id);
+
+            if ($existente && $existente['rol'] === 'SuperAdministrador') {
+                return ['ok' => false, 'mensaje' => 'No se puede modificar la cuenta SuperAdministrador.'];
+            }
+        }
+
+        if ($rolActor === 'SuperAdministrador') {
+            // El SuperAdministrador decide libremente entre Cajero y Administrador
+            $rol = $rolSolicitado === 'Administrador' ? 'Administrador' : 'Cajero';
+        } elseif ($existente && $existente['rol'] === 'Administrador') {
+            // Un Administrador no puede ascender ni degradar a otro Administrador:
+            // solo puede tocar sus demas datos (nombre, usuario, contrasena, estado).
+            $rol = 'Administrador';
+        } else {
+            $rol = 'Cajero';
+        }
 
         if ($nombre === '') {
             return ['ok' => false, 'mensaje' => 'El nombre completo es obligatorio.'];
@@ -89,6 +117,12 @@ class UsuarioController
 
         if ($id === (int) $idUsuarioActual && $estado === 0) {
             return ['ok' => false, 'mensaje' => 'No puede desactivar su propio usuario.'];
+        }
+
+        $existente = $this->modelo->obtenerPorId($id);
+
+        if ($existente && $existente['rol'] === 'SuperAdministrador') {
+            return ['ok' => false, 'mensaje' => 'No se puede modificar la cuenta SuperAdministrador.'];
         }
 
         if ($estado === 0 && $this->modelo->contarAdministradoresActivos($id) === 0) {

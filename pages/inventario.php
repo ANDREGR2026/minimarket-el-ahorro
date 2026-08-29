@@ -3,6 +3,7 @@
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../middleware/Auth.php';
 require_once __DIR__ . '/../controllers/InventarioController.php';
+require_once __DIR__ . '/../controllers/ProductoController.php';
 
 Auth::checkRole(['Administrador']);
 
@@ -18,27 +19,95 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $resultado = $controlador->registrar($_POST, Auth::id());
 
     flash($resultado['ok'] ? 'exito' : 'error', $resultado['mensaje']);
-    redirigir('inventario');
+    redirigir('inventario' . (!empty($_POST['id_producto_actual'])
+        ? '?id_producto=' . (int) $_POST['id_producto_actual']
+        : ''));
 }
 
 // ---------------------------------------------------------------- consulta
-$filtros = [
-    'tipo'     => $_GET['tipo'] ?? '',
-    'busqueda' => trim($_GET['q'] ?? ''),
-    'desde'    => $_GET['desde'] ?? '',
-    'hasta'    => $_GET['hasta'] ?? '',
-];
+$idProducto      = (int) ($_GET['id_producto'] ?? 0);
+$productoFiltro  = null;
 
-$movimientos = $controlador->movimientos($filtros, 150);
-$productos   = $controlador->productosActivos();
+if ($idProducto > 0) {
+    $productoFiltro = (new ProductoController())->obtener($idProducto);
 
-$titulo = 'Inventario';
+    if (!$productoFiltro) {
+        flash('error', 'El producto solicitado no existe.');
+        redirigir('productos');
+    }
+
+    $movimientos = $controlador->kardex($idProducto);
+} else {
+    $filtros = [
+        'tipo'     => $_GET['tipo'] ?? '',
+        'busqueda' => trim($_GET['q'] ?? ''),
+        'desde'    => $_GET['desde'] ?? '',
+        'hasta'    => $_GET['hasta'] ?? '',
+    ];
+
+    $movimientos = $controlador->movimientos($filtros, 150);
+}
+
+$productos = $controlador->productosActivos();
+
+$titulo = $productoFiltro ? 'Inventario · ' . $productoFiltro['nombre'] : 'Inventario';
 $activo = 'inventario';
 
 require __DIR__ . '/../components/layout_inicio.php';
 ?>
 
 <?php require __DIR__ . '/../components/flash.php'; ?>
+
+<?php if ($productoFiltro): ?>
+    <div class="mb-5">
+        <a href="<?= BASE_URL ?>productos" class="text-sm font-medium text-marca-600 hover:text-marca-700">
+            &larr; Volver al catálogo
+        </a>
+    </div>
+
+    <!-- ===================== Ficha del producto ===================== -->
+    <div class="tarjeta mb-5 p-5">
+        <div class="flex flex-wrap items-start justify-between gap-4">
+            <div class="flex items-center gap-4">
+                <?php if (!empty($productoFiltro['imagen'])): ?>
+                    <img src="<?= BASE_URL ?>assets/img/productos/<?= e($productoFiltro['imagen']) ?>"
+                        alt="" class="h-16 w-16 rounded-xl object-cover ring-1 ring-slate-200">
+                <?php else: ?>
+                    <span class="flex h-16 w-16 items-center justify-center rounded-xl bg-slate-100 text-slate-400">
+                        <svg class="h-7 w-7" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2 3 7v10l9 5 9-5V7l-9-5z" />
+                        </svg>
+                    </span>
+                <?php endif; ?>
+
+                <div>
+                    <h2 class="text-lg font-semibold text-slate-800"><?= e($productoFiltro['nombre']) ?></h2>
+                    <p class="text-sm text-slate-500">
+                        <?= e($productoFiltro['categoria']) ?> ·
+                        <span class="font-mono text-xs"><?= e($productoFiltro['codigo_barras']) ?></span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-6 text-center">
+                <div>
+                    <p class="text-xs tracking-wide text-slate-400 uppercase">Stock actual</p>
+                    <p class="text-2xl font-bold <?= (int) $productoFiltro['stock'] <= (int) $productoFiltro['stock_minimo'] ? 'text-red-600' : 'text-slate-800' ?>">
+                        <?= (int) $productoFiltro['stock'] ?>
+                    </p>
+                </div>
+                <div>
+                    <p class="text-xs tracking-wide text-slate-400 uppercase">Stock mínimo</p>
+                    <p class="text-2xl font-bold text-slate-800"><?= (int) $productoFiltro['stock_minimo'] ?></p>
+                </div>
+                <div>
+                    <p class="text-xs tracking-wide text-slate-400 uppercase">Precio venta</p>
+                    <p class="text-2xl font-bold text-slate-800"><?= money($productoFiltro['precio_venta']) ?></p>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
 
 <div class="grid gap-5 lg:grid-cols-3">
 
@@ -53,6 +122,7 @@ require __DIR__ . '/../components/layout_inicio.php';
 
         <form method="POST" action="<?= BASE_URL ?>inventario" class="space-y-4 px-5 py-5">
             <?= csrf_field() ?>
+            <input type="hidden" name="id_producto_actual" value="<?= (int) $idProducto ?>">
 
             <div>
                 <label for="id_producto" class="etiqueta">Producto <span class="text-red-500">*</span></label>
@@ -61,7 +131,8 @@ require __DIR__ . '/../components/layout_inicio.php';
                     <?php foreach ($productos as $producto): ?>
                         <option value="<?= (int) $producto['id_producto'] ?>"
                             data-stock="<?= (int) $producto['stock'] ?>"
-                            data-unidad="<?= e($producto['unidad_medida']) ?>">
+                            data-unidad="<?= e($producto['unidad_medida']) ?>"
+                            <?= (int) $producto['id_producto'] === $idProducto ? 'selected' : '' ?>>
                             <?= e($producto['nombre']) ?>
                         </option>
                     <?php endforeach; ?>
@@ -100,39 +171,43 @@ require __DIR__ . '/../components/layout_inicio.php';
 
     <!-- ===================== Historial de movimientos ===================== -->
     <div class="lg:col-span-2">
-        <form method="GET" action="<?= BASE_URL ?>inventario"
-            class="mb-4 flex flex-wrap items-end gap-2">
-            <div>
-                <label for="q" class="etiqueta">Producto</label>
-                <input type="search" id="q" name="q" value="<?= e($filtros['busqueda']) ?>"
-                    class="campo w-44" placeholder="Buscar...">
-            </div>
+        <?php if (!$productoFiltro): ?>
+            <form method="GET" action="<?= BASE_URL ?>inventario"
+                class="mb-4 flex flex-wrap items-end gap-2">
+                <div>
+                    <label for="q" class="etiqueta">Producto</label>
+                    <input type="search" id="q" name="q" value="<?= e($filtros['busqueda']) ?>"
+                        class="campo w-44" placeholder="Buscar...">
+                </div>
 
-            <div>
-                <label for="tipo" class="etiqueta">Tipo</label>
-                <select id="tipo" name="tipo" class="campo w-32">
-                    <option value="">Todos</option>
-                    <?php foreach (['ENTRADA', 'SALIDA', 'AJUSTE'] as $tipo): ?>
-                        <option value="<?= $tipo ?>" <?= $filtros['tipo'] === $tipo ? 'selected' : '' ?>>
-                            <?= ucfirst(strtolower($tipo)) ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
+                <div>
+                    <label for="tipo" class="etiqueta">Tipo</label>
+                    <select id="tipo" name="tipo" class="campo w-32">
+                        <option value="">Todos</option>
+                        <?php foreach (['ENTRADA', 'SALIDA', 'AJUSTE'] as $tipo): ?>
+                            <option value="<?= $tipo ?>" <?= $filtros['tipo'] === $tipo ? 'selected' : '' ?>>
+                                <?= ucfirst(strtolower($tipo)) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
 
-            <div>
-                <label for="desde" class="etiqueta">Desde</label>
-                <input type="date" id="desde" name="desde" value="<?= e($filtros['desde']) ?>" class="campo w-36">
-            </div>
+                <div>
+                    <label for="desde" class="etiqueta">Desde</label>
+                    <input type="date" id="desde" name="desde" value="<?= e($filtros['desde']) ?>" class="campo w-36">
+                </div>
 
-            <div>
-                <label for="hasta" class="etiqueta">Hasta</label>
-                <input type="date" id="hasta" name="hasta" value="<?= e($filtros['hasta']) ?>" class="campo w-36">
-            </div>
+                <div>
+                    <label for="hasta" class="etiqueta">Hasta</label>
+                    <input type="date" id="hasta" name="hasta" value="<?= e($filtros['hasta']) ?>" class="campo w-36">
+                </div>
 
-            <button type="submit" class="btn-secundario">Filtrar</button>
-            <a href="<?= BASE_URL ?>inventario" class="btn-secundario">Limpiar</a>
-        </form>
+                <button type="submit" class="btn-secundario">Filtrar</button>
+                <a href="<?= BASE_URL ?>inventario" class="btn-secundario">Limpiar</a>
+            </form>
+        <?php else: ?>
+            <h3 class="mb-3 font-semibold text-slate-800">Kardex del producto</h3>
+        <?php endif; ?>
 
         <div class="tarjeta overflow-hidden">
             <div class="max-h-[560px] overflow-auto">
@@ -140,7 +215,7 @@ require __DIR__ . '/../components/layout_inicio.php';
                     <thead class="sticky top-0">
                         <tr>
                             <th>Fecha</th>
-                            <th>Producto</th>
+                            <?php if (!$productoFiltro): ?><th>Producto</th><?php endif; ?>
                             <th class="text-center">Tipo</th>
                             <th class="text-center">Cant.</th>
                             <th class="text-center">Stock</th>
@@ -151,7 +226,7 @@ require __DIR__ . '/../components/layout_inicio.php';
                     <tbody>
                         <?php if (empty($movimientos)): ?>
                             <tr>
-                                <td colspan="7" class="px-4 py-10 text-center text-slate-400">
+                                <td colspan="<?= $productoFiltro ? 6 : 7 ?>" class="px-4 py-10 text-center text-slate-400">
                                     Todavía no hay movimientos de inventario registrados.
                                 </td>
                             </tr>
@@ -162,7 +237,9 @@ require __DIR__ . '/../components/layout_inicio.php';
                                 <td class="whitespace-nowrap text-xs text-slate-500">
                                     <?= fecha_hora($movimiento['fecha']) ?>
                                 </td>
-                                <td class="font-medium text-slate-800"><?= e($movimiento['producto']) ?></td>
+                                <?php if (!$productoFiltro): ?>
+                                    <td class="font-medium text-slate-800"><?= e($movimiento['producto']) ?></td>
+                                <?php endif; ?>
                                 <td class="text-center">
                                     <?php
                                     $clasesTipo = [
@@ -182,7 +259,13 @@ require __DIR__ . '/../components/layout_inicio.php';
                                     <?= (int) $movimiento['stock_anterior'] ?> &rarr;
                                     <strong class="text-slate-700"><?= (int) $movimiento['stock_nuevo'] ?></strong>
                                 </td>
-                                <td class="text-xs text-slate-500"><?= e($movimiento['motivo']) ?></td>
+                                <td class="text-xs text-slate-500">
+                                    <?= e($movimiento['motivo']) ?>
+                                    <?php if ($productoFiltro && !empty($movimiento['id_venta'])): ?>
+                                        <a href="<?= BASE_URL ?>venta/<?= (int) $movimiento['id_venta'] ?>"
+                                            class="ml-1 font-medium text-marca-600 hover:text-marca-700">ver venta</a>
+                                    <?php endif; ?>
+                                </td>
                                 <td class="text-xs text-slate-500"><?= e($movimiento['usuario']) ?></td>
                             </tr>
                         <?php endforeach; ?>
@@ -230,6 +313,8 @@ require __DIR__ . '/../components/layout_inicio.php';
             ayuda.textContent = 'Unidades que ingresan al stock.';
         }
     }
+
+    document.addEventListener('DOMContentLoaded', mostrarStock);
 </script>
 
 <?php require __DIR__ . '/../components/layout_fin.php'; ?>

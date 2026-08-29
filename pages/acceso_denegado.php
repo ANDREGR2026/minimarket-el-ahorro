@@ -2,10 +2,12 @@
 
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../middleware/Auth.php';
+require_once __DIR__ . '/../models/Configuracion.php';
 
 Auth::check();
 
 $destino = Auth::esAdministrador() ? 'dashboard' : 'pos';
+$nombreComercial = (new Configuracion())->obtener('nombre_comercial', 'EL AHORRO');
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -13,7 +15,7 @@ $destino = Auth::esAdministrador() ? 'dashboard' : 'pos';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acceso denegado · Minimarket El Ahorro</title>
+    <title>Acceso denegado · <?= e($nombreComercial) ?></title>
     <link rel="icon" href="<?= BASE_URL ?>assets/img/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/tailwind.css">
 </head>

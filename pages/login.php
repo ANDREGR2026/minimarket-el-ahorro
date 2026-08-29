@@ -3,6 +3,9 @@
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../middleware/Auth.php';
 require_once __DIR__ . '/../controllers/LoginController.php';
+require_once __DIR__ . '/../models/Configuracion.php';
+
+$nombreComercial = (new Configuracion())->obtener('nombre_comercial', 'EL AHORRO');
 
 // Si ya inició sesión, no tiene sentido volver al login.
 if (!Auth::invitado()) {
@@ -35,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar sesión · Minimarket El Ahorro</title>
+    <title>Iniciar sesión · <?= e($nombreComercial) ?></title>
     <link rel="icon" href="<?= BASE_URL ?>assets/img/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="<?= BASE_URL ?>assets/css/tailwind.css">
 </head>
@@ -53,8 +56,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <div class="relative flex items-center gap-3">
-                <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-white/15 text-xl font-bold text-white">M</span>
-                <span class="text-lg font-semibold text-white">Minimarket El Ahorro</span>
+                <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-white/15 text-xl font-bold text-white">A</span>
+                <span class="text-lg font-semibold text-white"><?= e($nombreComercial) ?></span>
             </div>
 
             <div class="relative">
@@ -102,8 +105,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="w-full max-w-sm">
 
                 <div class="mb-8 flex items-center gap-3 lg:hidden">
-                    <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-marca-600 text-xl font-bold text-white">M</span>
-                    <span class="text-lg font-semibold text-slate-800">Minimarket El Ahorro</span>
+                    <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-marca-600 text-xl font-bold text-white">A</span>
+                    <span class="text-lg font-semibold text-slate-800"><?= e($nombreComercial) ?></span>
                 </div>
 
                 <h1 class="text-2xl font-bold text-slate-900">Iniciar sesión</h1>
@@ -154,6 +157,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         Cuentas de prueba
                     </p>
                     <div class="space-y-1 text-sm text-slate-600">
+                        <p><span class="badge-morado">SuperAdmin</span> superadmin / super123</p>
                         <p><span class="badge-azul">Administrador</span> admin / admin123</p>
                         <p><span class="badge-gris">Cajero</span> cajero / cajero123</p>
                     </div>

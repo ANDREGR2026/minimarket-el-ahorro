@@ -160,7 +160,7 @@ require __DIR__ . '/../components/layout_inicio.php';
                         </td>
                         <?php if ($esAdmin): ?>
                             <td class="text-right whitespace-nowrap">
-                                <a href="<?= BASE_URL ?>kardex/<?= (int) $producto['id_producto'] ?>"
+                                <a href="<?= BASE_URL ?>inventario?id_producto=<?= (int) $producto['id_producto'] ?>"
                                     class="btn-secundario btn-sm">Kardex</a>
 
                                 <button type="button" class="btn-secundario btn-sm"
