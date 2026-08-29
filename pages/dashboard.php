@@ -18,10 +18,16 @@ require __DIR__ . '/../components/layout_inicio.php';
 
 <?php require __DIR__ . '/../components/flash.php'; ?>
 
-<div class="mb-5 flex items-center justify-between">
-    <p class="text-sm text-slate-500">Resumen del día. Para gráficos y detalle por rango de fechas, andá a Reportes.</p>
+<div class="mb-6 flex flex-wrap items-center justify-between gap-3">
+    <div>
+        <h2 class="text-base font-semibold text-slate-800">Hola, <?= e(explode(' ', Auth::nombre())[0]) ?></h2>
+        <p class="mt-0.5 text-sm text-slate-500">Así viene el negocio hoy.</p>
+    </div>
     <a href="<?= BASE_URL ?>reportes" class="btn-secundario btn-sm">
-        Ver reportes completos &rarr;
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M5 9.2h3V19H5V9.2zM10.6 5h2.8v14h-2.8V5zm5.6 8H19v6h-2.8v-6z" />
+        </svg>
+        Ver reportes completos
     </a>
 </div>
 
@@ -77,7 +83,7 @@ require __DIR__ . '/../components/layout_inicio.php';
         </div>
     </div>
 
-    <div class="tarjeta p-5">
+    <a href="<?= BASE_URL ?>productos?stock_bajo=1" class="tarjeta block p-5 transition hover:border-red-200 hover:shadow-md">
         <div class="flex items-start justify-between">
             <div>
                 <p class="text-xs font-medium tracking-wide text-slate-400 uppercase">Stock bajo mínimo</p>
@@ -94,7 +100,7 @@ require __DIR__ . '/../components/layout_inicio.php';
                 </svg>
             </span>
         </div>
-    </div>
+    </a>
 </div>
 
 <div class="mb-5">
@@ -102,9 +108,11 @@ require __DIR__ . '/../components/layout_inicio.php';
     <!-- Alerta de stock -->
     <div class="tarjeta overflow-hidden">
         <div class="flex items-center justify-between border-b border-slate-200 px-5 py-4">
-            <div>
+            <div class="flex items-center gap-2">
                 <h2 class="font-semibold text-slate-800">Productos por reponer</h2>
-                <p class="mt-0.5 text-xs text-slate-500">Stock igual o menor al mínimo configurado.</p>
+                <?php if (!empty($datos['stockBajo'])): ?>
+                    <span class="badge-rojo"><?= count($datos['stockBajo']) ?></span>
+                <?php endif; ?>
             </div>
             <a href="<?= BASE_URL ?>productos?stock_bajo=1"
                 class="text-xs font-medium text-marca-600 hover:text-marca-700">Ver todos</a>
@@ -118,12 +126,13 @@ require __DIR__ . '/../components/layout_inicio.php';
                         <th>Categoría</th>
                         <th class="text-center">Stock</th>
                         <th class="text-center">Mínimo</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (empty($datos['stockBajo'])): ?>
                         <tr>
-                            <td colspan="4" class="px-4 py-10 text-center text-slate-400">
+                            <td colspan="5" class="px-4 py-10 text-center text-slate-400">
                                 Ningún producto está por debajo del mínimo.
                             </td>
                         </tr>
@@ -137,6 +146,10 @@ require __DIR__ . '/../components/layout_inicio.php';
                                 <span class="badge-rojo"><?= (int) $producto['stock'] ?></span>
                             </td>
                             <td class="text-center text-slate-500"><?= (int) $producto['stock_minimo'] ?></td>
+                            <td class="text-right">
+                                <a href="<?= BASE_URL ?>inventario?id_producto=<?= (int) $producto['id_producto'] ?>"
+                                    class="btn-secundario btn-sm">Reponer</a>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

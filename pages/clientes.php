@@ -45,6 +45,8 @@ require __DIR__ . '/../components/layout_inicio.php';
 
 <?php require __DIR__ . '/../components/flash.php'; ?>
 
+<p class="mb-4 text-sm text-slate-500">Base de clientes para emitir boletas y facturas.</p>
+
 <div class="mb-5 flex flex-wrap items-end justify-between gap-3">
     <form method="GET" action="<?= BASE_URL ?>clientes" class="flex flex-wrap items-end gap-2">
         <div>

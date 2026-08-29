@@ -25,6 +25,11 @@ require __DIR__ . '/../components/layout_inicio.php';
     };
 </script>
 
+<div class="mb-5">
+    <h2 class="text-base font-semibold text-slate-800">Nueva venta</h2>
+    <p class="mt-0.5 text-sm text-slate-500">Busque productos, arme el carrito y cobre.</p>
+</div>
+
 <div class="grid gap-5 lg:grid-cols-5">
 
     <!-- ============================================================
