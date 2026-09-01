@@ -8,9 +8,18 @@
 $__rootPath = str_replace(DIRECTORY_SEPARATOR, '/', __DIR__);
 define('ROOT_PATH', $__rootPath);
 
-$__documentRoot = str_replace(DIRECTORY_SEPARATOR, '/', $_SERVER['DOCUMENT_ROOT'] ?? $__rootPath);
-$__relativePath = str_replace($__documentRoot, '', $__rootPath);
-$__relativePath = trim($__relativePath, '/');
+// Solo se recorta el DOCUMENT_ROOT si realmente es un prefijo de ROOT_PATH.
+// Si el servidor lo reporta vacío o distinto (proxies, servidores de
+// desarrollo no estándar), str_replace('', '', ...) dejaría pasar la ruta
+// completa del disco tal cual dentro de BASE_URL -y de cualquier enlace
+// que se arme con ella, como el del correo de recuperación-. Ante la duda
+// se usa '/' como respaldo seguro en vez de filtrar la ruta del servidor.
+$__documentRoot = str_replace(DIRECTORY_SEPARATOR, '/', (string) ($_SERVER['DOCUMENT_ROOT'] ?? ''));
+$__relativePath = '';
+
+if ($__documentRoot !== '' && strpos($__rootPath, $__documentRoot) === 0) {
+    $__relativePath = trim(substr($__rootPath, strlen($__documentRoot)), '/');
+}
 
 if ($__relativePath !== '') {
     define('BASE_URL', '/' . $__relativePath . '/');
