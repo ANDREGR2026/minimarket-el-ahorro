@@ -207,7 +207,8 @@ require __DIR__ . '/../components/layout_inicio.php';
 
                 <div>
                     <label for="telefono" class="etiqueta">Teléfono</label>
-                    <input type="text" id="telefono" name="telefono" class="campo" maxlength="20">
+                    <input type="tel" id="telefono" name="telefono" class="campo"
+                        inputmode="numeric" pattern="[0-9 ]*" maxlength="20">
                 </div>
 
                 <div>
@@ -289,6 +290,11 @@ require __DIR__ . '/../components/layout_inicio.php';
     // Solo se aceptan dígitos en el número de documento
     document.getElementById('numero_documento').addEventListener('input', function() {
         this.value = this.value.replace(/\D/g, '');
+    });
+
+    // El teléfono solo acepta dígitos y espacios (letras se descartan al escribir)
+    document.getElementById('telefono').addEventListener('input', function() {
+        this.value = this.value.replace(/[^0-9 ]/g, '');
     });
 
     modal.addEventListener('click', (e) => {
