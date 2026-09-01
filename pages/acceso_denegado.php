@@ -6,7 +6,7 @@ require_once __DIR__ . '/../models/Configuracion.php';
 
 Auth::check();
 
-$destino = Auth::esAdministrador() ? 'dashboard' : 'pos';
+$destino = Auth::destinoInicial();
 $nombreComercial = (new Configuracion())->obtener('nombre_comercial', 'EL AHORRO');
 ?>
 <!DOCTYPE html>

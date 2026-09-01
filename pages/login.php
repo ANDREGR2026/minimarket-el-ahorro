@@ -9,7 +9,7 @@ $nombreComercial = (new Configuracion())->obtener('nombre_comercial', 'EL AHORRO
 
 // Si ya inició sesión, no tiene sentido volver al login.
 if (!Auth::invitado()) {
-    redirigir(Auth::esAdministrador() ? 'dashboard' : 'pos');
+    redirigir(Auth::destinoInicial());
 }
 
 $error   = '';

@@ -8,7 +8,7 @@ require_once __DIR__ . '/../models/Configuracion.php';
 $nombreComercial = (new Configuracion())->obtener('nombre_comercial', 'EL AHORRO');
 
 if (!Auth::invitado()) {
-    redirigir(Auth::esAdministrador() ? 'dashboard' : 'pos');
+    redirigir(Auth::destinoInicial());
 }
 
 $controlador = new RecuperacionController();
