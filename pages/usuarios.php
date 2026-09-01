@@ -65,6 +65,7 @@ require __DIR__ . '/../components/layout_inicio.php';
                 <?php endif; ?>
                 <option value="Administrador" <?= $rol === 'Administrador' ? 'selected' : '' ?>>Administrador</option>
                 <option value="Cajero" <?= $rol === 'Cajero' ? 'selected' : '' ?>>Cajero</option>
+                <option value="Almacenero" <?= $rol === 'Almacenero' ? 'selected' : '' ?>>Almacenero</option>
             </select>
         </div>
 
@@ -93,6 +94,7 @@ require __DIR__ . '/../components/layout_inicio.php';
             $claseRol = match ($usuario['rol']) {
                 'SuperAdministrador' => 'badge-morado',
                 'Administrador'       => 'badge-azul',
+                'Almacenero'          => 'badge-ambar',
                 default               => 'badge-gris',
             };
             ?>
@@ -178,6 +180,7 @@ require __DIR__ . '/../components/layout_inicio.php';
                             $claseRol = match ($usuario['rol']) {
                                 'SuperAdministrador' => 'badge-morado',
                                 'Administrador'       => 'badge-azul',
+                                'Almacenero'          => 'badge-ambar',
                                 default               => 'badge-gris',
                             };
                             ?>
@@ -265,6 +268,7 @@ require __DIR__ . '/../components/layout_inicio.php';
                     <label for="rol-form" class="etiqueta">Rol <span class="text-red-500">*</span></label>
                     <select id="rol-form" name="rol" class="campo" required>
                         <option value="Cajero">Cajero — solo punto de venta y consultas</option>
+                        <option value="Almacenero">Almacenero — solo inventario y consulta de catálogo</option>
                         <?php if (Auth::esSuperAdministrador()): ?>
                             <option value="Administrador">Administrador — acceso total</option>
                         <?php endif; ?>

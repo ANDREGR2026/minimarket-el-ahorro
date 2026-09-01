@@ -155,6 +155,26 @@ class LoginControllerTest extends TestCase
         $this->assertSame(2, $_SESSION['usuario']['id_usuario']);
     }
 
+    public function test_autenticar_almacenero_destino_inventario(): void
+    {
+        $mock = $this->createMock(Usuario::class);
+        $mock->method('obtenerPorUsuario')->willReturn([
+            'id_usuario' => 4,
+            'nombre'     => 'Marco Solis',
+            'usuario'    => 'almacen',
+            'password'   => password_hash('almacen123', PASSWORD_DEFAULT),
+            'rol'        => 'Almacenero',
+        ]);
+
+        $controller = $this->crearController($mock);
+        $resultado  = $controller->autenticar('almacen', 'almacen123');
+
+        $this->assertTrue($resultado['ok']);
+        $this->assertSame('inventario', $resultado['destino']);
+        $this->assertSame(4, $_SESSION['usuario']['id_usuario']);
+        $this->assertSame('Almacenero', $_SESSION['usuario']['rol']);
+    }
+
     public function test_autenticar_exitoso_guarda_datos_en_sesion(): void
     {
         $mock = $this->createMock(Usuario::class);

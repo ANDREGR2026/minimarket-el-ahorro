@@ -7,6 +7,7 @@
 --   SuperAdministrador -> usuario: superadmin  contrasena: super123
 --   Administrador      -> usuario: admin       contrasena: admin123
 --   Cajero              -> usuario: cajero      contrasena: cajero123
+--   Almacenero          -> usuario: almacen     contrasena: almacen123
 -- =====================================================================
 
 USE minimarket;
@@ -29,7 +30,8 @@ INSERT INTO configuracion (clave, valor, descripcion) VALUES
 INSERT INTO usuarios (nombre, usuario, password, email, rol, estado) VALUES
 ('Super Administrador',  'superadmin', '$2y$10$GrD8fi73ASx43v7d0yiawu08SUw6s/CPc65bGXjEU93iBv5NW2ft2', 'superadmin@elahorro.pe', 'SuperAdministrador', 1),
 ('Andre Gutierrez Rojas', 'admin',  '$2y$10$/2UWllHyHOyQ8VlTBSZqIuGPnRYaX3T2y7yyfU7yD2dxqPcuKVTb2', 'admin@elahorro.pe', 'Administrador', 1),
-('Lucia Ramos Peralta',   'cajero', '$2y$10$RM8/FmBegI8rJg9KidMa2ewcm6FiwrvUWGwpEtKk9idMnx0j80bPu', 'cajero@elahorro.pe', 'Cajero', 1);
+('Lucia Ramos Peralta',   'cajero', '$2y$10$RM8/FmBegI8rJg9KidMa2ewcm6FiwrvUWGwpEtKk9idMnx0j80bPu', 'cajero@elahorro.pe', 'Cajero', 1),
+('Marco Solis Vega',      'almacen', '$2y$10$TX6jHugKh07pK0Vg2kGoWeYTCTYVgLtHNANumlcVXZdiSeUMkdcyK', 'almacen@elahorro.pe', 'Almacenero', 1);
 
 -- ---------------------------------------------------------------------
 -- Series de comprobante

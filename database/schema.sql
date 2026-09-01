@@ -20,7 +20,7 @@ CREATE TABLE usuarios (
     usuario            VARCHAR(50)   NOT NULL,
     password           VARCHAR(255)  NOT NULL,
     email              VARCHAR(100)  NULL,
-    rol                ENUM('SuperAdministrador','Administrador','Cajero') NOT NULL DEFAULT 'Cajero',
+    rol                ENUM('SuperAdministrador','Administrador','Cajero','Almacenero') NOT NULL DEFAULT 'Cajero',
     estado             TINYINT(1)    NOT NULL DEFAULT 1,
     reset_token_hash   VARCHAR(255)  NULL,
     reset_token_expira DATETIME      NULL,

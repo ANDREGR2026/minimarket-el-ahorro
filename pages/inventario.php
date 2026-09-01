@@ -5,7 +5,7 @@ require_once __DIR__ . '/../middleware/Auth.php';
 require_once __DIR__ . '/../controllers/InventarioController.php';
 require_once __DIR__ . '/../controllers/ProductoController.php';
 
-Auth::checkRole(['Administrador']);
+Auth::checkRole(['Administrador', 'Almacenero']);
 
 $controlador = new InventarioController();
 

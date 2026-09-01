@@ -8,3 +8,6 @@ vendor/
 *.log
 Thumbs.db
 desktop.ini
+~$*.doc*
+~$*.xls*
+~$*.ppt*

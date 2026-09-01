@@ -46,7 +46,13 @@ class LoginController
             'rol'        => $registro['rol'],
         ];
 
-        $destino = Auth::esAdministrador() ? 'dashboard' : 'pos';
+        if (Auth::esAdministrador()) {
+            $destino = 'dashboard';
+        } elseif (Auth::esAlmacenero()) {
+            $destino = 'inventario';
+        } else {
+            $destino = 'pos';
+        }
 
         return ['ok' => true, 'mensaje' => '', 'destino' => $destino];
     }
