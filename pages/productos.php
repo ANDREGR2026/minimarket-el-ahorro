@@ -101,7 +101,87 @@ require __DIR__ . '/../components/layout_inicio.php';
 </div>
 
 <div class="tarjeta overflow-hidden">
-    <div class="overflow-x-auto">
+
+    <!-- ---- Vista en tarjetas (mobile) ---- -->
+    <div class="divide-y divide-slate-100 sm:hidden">
+        <?php if (empty($productos)): ?>
+            <p class="px-4 py-10 text-center text-slate-400">No se encontraron productos con esos filtros.</p>
+        <?php endif; ?>
+
+        <?php foreach ($productos as $producto): ?>
+            <?php $bajo = (int) $producto['stock'] <= (int) $producto['stock_minimo']; ?>
+            <div class="p-4">
+                <div class="flex items-start gap-3">
+                    <?php if (!empty($producto['imagen'])): ?>
+                        <img src="<?= BASE_URL ?>assets/img/productos/<?= e($producto['imagen']) ?>"
+                            alt="" class="h-11 w-11 shrink-0 rounded-lg object-cover ring-1 ring-slate-200">
+                    <?php else: ?>
+                        <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-400">
+                            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2 3 7v10l9 5 9-5V7l-9-5z" />
+                            </svg>
+                        </span>
+                    <?php endif; ?>
+                    <div class="min-w-0 flex-1">
+                        <p class="truncate font-medium text-slate-800"><?= e($producto['nombre']) ?></p>
+                        <p class="text-xs text-slate-400"><?= e($producto['categoria']) ?> · <?= e($producto['codigo_barras']) ?></p>
+                    </div>
+                    <?php if ((int) $producto['estado'] === 1): ?>
+                        <span class="badge-verde shrink-0">Activo</span>
+                    <?php else: ?>
+                        <span class="badge-gris shrink-0">Inactivo</span>
+                    <?php endif; ?>
+                </div>
+
+                <div class="mt-3 grid grid-cols-2 gap-2 text-sm">
+                    <div>
+                        <p class="text-xs text-slate-400">P. compra</p>
+                        <p class="font-medium text-slate-700"><?= money($producto['precio_compra']) ?></p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-slate-400">P. venta</p>
+                        <p class="font-semibold text-slate-800"><?= money($producto['precio_venta']) ?></p>
+                    </div>
+                </div>
+
+                <div class="mt-2 flex items-center justify-between text-sm">
+                    <span class="text-slate-500">Stock</span>
+                    <span>
+                        <span class="<?= $bajo ? 'badge-rojo' : 'badge-verde' ?>">
+                            <?= (int) $producto['stock'] ?> <?= e(strtolower($producto['unidad_medida'])) ?>
+                        </span>
+                        <span class="ml-1 text-[11px] text-slate-400">mín. <?= (int) $producto['stock_minimo'] ?></span>
+                    </span>
+                </div>
+
+                <?php if ($esAdmin): ?>
+                    <div class="mt-3 flex flex-wrap gap-2">
+                        <a href="<?= BASE_URL ?>inventario?id_producto=<?= (int) $producto['id_producto'] ?>"
+                            class="btn-secundario btn-sm">Kardex</a>
+
+                        <button type="button" class="btn-secundario btn-sm"
+                            onclick='editar(<?= json_encode($producto, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'>
+                            Editar
+                        </button>
+
+                        <form method="POST" action="<?= BASE_URL ?>productos" class="inline">
+                            <?= csrf_field() ?>
+                            <input type="hidden" name="accion" value="estado">
+                            <input type="hidden" name="id_producto" value="<?= (int) $producto['id_producto'] ?>">
+                            <input type="hidden" name="estado" value="<?= (int) $producto['estado'] === 1 ? 0 : 1 ?>">
+                            <button type="submit"
+                                class="<?= (int) $producto['estado'] === 1 ? 'btn-peligro' : 'btn-exito' ?> btn-sm">
+                                <?= (int) $producto['estado'] === 1 ? 'Desactivar' : 'Activar' ?>
+                            </button>
+                        </form>
+                    </div>
+                <?php endif; ?>
+            </div>
+        <?php endforeach; ?>
+    </div>
+
+    <!-- ---- Vista en tabla (sm en adelante) ---- -->
+    <div class="hidden overflow-x-auto sm:block">
         <table class="tabla">
             <thead>
                 <tr>

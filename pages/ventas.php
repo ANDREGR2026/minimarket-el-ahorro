@@ -126,7 +126,56 @@ require __DIR__ . '/../components/layout_inicio.php';
 </div>
 
 <div class="tarjeta overflow-hidden">
-    <div class="overflow-x-auto">
+
+    <!-- ---- Vista en tarjetas (mobile) ---- -->
+    <div class="divide-y divide-slate-100 sm:hidden">
+        <?php if (empty($ventas)): ?>
+            <p class="px-4 py-10 text-center text-slate-400">No hay ventas registradas en el período seleccionado.</p>
+        <?php endif; ?>
+
+        <?php foreach ($ventas as $venta): ?>
+            <?php $numero = $venta['serie'] . '-' . str_pad($venta['correlativo'], 6, '0', STR_PAD_LEFT); ?>
+            <div class="p-4 <?= $venta['estado'] === 'ANULADA' ? 'opacity-60' : '' ?>">
+                <div class="flex items-start justify-between gap-3">
+                    <div class="min-w-0">
+                        <p class="truncate font-mono text-sm font-medium text-slate-800"><?= e($numero) ?></p>
+                        <p class="text-xs text-slate-400"><?= e(ucfirst(strtolower($venta['tipo_comprobante']))) ?> · <?= fecha_hora($venta['fecha']) ?></p>
+                    </div>
+                    <?php if ($venta['estado'] === 'EMITIDA'): ?>
+                        <span class="badge-verde shrink-0">Emitida</span>
+                    <?php else: ?>
+                        <span class="badge-rojo shrink-0">Anulada</span>
+                    <?php endif; ?>
+                </div>
+
+                <p class="mt-2 text-sm text-slate-700"><?= e($venta['cliente'] ?: 'Cliente varios') ?></p>
+                <p class="text-xs text-slate-400">Cajero: <?= e($venta['cajero']) ?></p>
+
+                <div class="mt-2 flex items-center justify-between text-sm">
+                    <span class="text-slate-500"><?= (int) $venta['items'] ?> ítem(s)</span>
+                    <span class="font-semibold text-slate-800"><?= money($venta['total']) ?></span>
+                </div>
+
+                <div class="mt-3 flex flex-wrap gap-2">
+                    <a href="<?= BASE_URL ?>venta/<?= (int) $venta['id_venta'] ?>"
+                        class="btn-secundario btn-sm">Ver</a>
+
+                    <a href="<?= BASE_URL ?>comprobante/<?= (int) $venta['id_venta'] ?>"
+                        target="_blank" class="btn-secundario btn-sm">PDF</a>
+
+                    <?php if ($venta['estado'] === 'EMITIDA' && Auth::esAdministrador()): ?>
+                        <button type="button" class="btn-peligro btn-sm"
+                            onclick="abrirAnulacion(<?= (int) $venta['id_venta'] ?>, '<?= e($numero) ?>')">
+                            Anular
+                        </button>
+                    <?php endif; ?>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+
+    <!-- ---- Vista en tabla (sm en adelante) ---- -->
+    <div class="hidden overflow-x-auto sm:block">
         <table class="tabla">
             <thead>
                 <tr>

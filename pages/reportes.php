@@ -110,7 +110,24 @@ require __DIR__ . '/../components/layout_inicio.php';
         <div class="border-b border-slate-200 px-5 py-4">
             <h2 class="font-semibold text-slate-800">Ventas por cajero</h2>
         </div>
-        <div class="overflow-x-auto">
+        <!-- ---- Vista en tarjetas (mobile) ---- -->
+        <div class="divide-y divide-slate-100 sm:hidden">
+            <?php if (empty($datos['porCajero'])): ?>
+                <p class="px-4 py-10 text-center text-slate-400">Sin ventas en el período.</p>
+            <?php endif; ?>
+            <?php foreach ($datos['porCajero'] as $fila): ?>
+                <div class="flex items-center justify-between gap-3 p-4">
+                    <div class="min-w-0">
+                        <p class="truncate font-medium text-slate-800"><?= e($fila['cajero']) ?></p>
+                        <p class="text-xs text-slate-500"><?= (int) $fila['tickets'] ?> comprobante(s) · prom. <?= money($fila['ticket_promedio']) ?></p>
+                    </div>
+                    <span class="shrink-0 font-semibold text-slate-800"><?= money($fila['importe']) ?></span>
+                </div>
+            <?php endforeach; ?>
+        </div>
+
+        <!-- ---- Vista en tabla (sm en adelante) ---- -->
+        <div class="hidden overflow-x-auto sm:block">
             <table class="tabla">
                 <thead>
                     <tr>
@@ -147,7 +164,24 @@ require __DIR__ . '/../components/layout_inicio.php';
         <div class="border-b border-slate-200 px-5 py-4">
             <h2 class="font-semibold text-slate-800">Ventas por categoría</h2>
         </div>
-        <div class="overflow-x-auto">
+        <!-- ---- Vista en tarjetas (mobile) ---- -->
+        <div class="divide-y divide-slate-100 sm:hidden">
+            <?php if (empty($datos['porCategoria'])): ?>
+                <p class="px-4 py-10 text-center text-slate-400">Sin ventas en el período.</p>
+            <?php endif; ?>
+            <?php foreach ($datos['porCategoria'] as $fila): ?>
+                <div class="flex items-center justify-between gap-3 p-4">
+                    <div class="min-w-0">
+                        <p class="truncate font-medium text-slate-800"><?= e($fila['categoria']) ?></p>
+                        <p class="text-xs text-slate-500"><?= (int) $fila['unidades'] ?> unidad(es)</p>
+                    </div>
+                    <span class="shrink-0 font-semibold text-slate-800"><?= money($fila['importe']) ?></span>
+                </div>
+            <?php endforeach; ?>
+        </div>
+
+        <!-- ---- Vista en tabla (sm en adelante) ---- -->
+        <div class="hidden overflow-x-auto sm:block">
             <table class="tabla">
                 <thead>
                     <tr>
@@ -182,7 +216,25 @@ require __DIR__ . '/../components/layout_inicio.php';
         <div class="border-b border-slate-200 px-5 py-4">
             <h2 class="font-semibold text-slate-800">Productos más vendidos</h2>
         </div>
-        <div class="max-h-96 overflow-auto">
+        <!-- ---- Vista en tarjetas (mobile) ---- -->
+        <div class="max-h-96 divide-y divide-slate-100 overflow-auto sm:hidden">
+            <?php if (empty($datos['masVendidos'])): ?>
+                <p class="px-4 py-10 text-center text-slate-400">Sin ventas en el período.</p>
+            <?php endif; ?>
+            <?php foreach ($datos['masVendidos'] as $indice => $fila): ?>
+                <div class="flex items-center gap-3 p-4">
+                    <span class="w-5 shrink-0 text-slate-400"><?= $indice + 1 ?></span>
+                    <div class="min-w-0 flex-1">
+                        <p class="truncate font-medium text-slate-800"><?= e($fila['nombre']) ?></p>
+                        <p class="text-xs text-slate-400"><?= e($fila['categoria']) ?> · <?= (int) $fila['unidades'] ?> unid.</p>
+                    </div>
+                    <span class="shrink-0 font-semibold text-slate-800"><?= money($fila['importe']) ?></span>
+                </div>
+            <?php endforeach; ?>
+        </div>
+
+        <!-- ---- Vista en tabla (sm en adelante) ---- -->
+        <div class="hidden max-h-96 overflow-auto sm:block">
             <table class="tabla">
                 <thead class="sticky top-0">
                     <tr>
@@ -223,7 +275,27 @@ require __DIR__ . '/../components/layout_inicio.php';
             <h2 class="font-semibold text-slate-800">Productos por reponer</h2>
             <p class="mt-0.5 text-xs text-slate-500">Independiente del período consultado.</p>
         </div>
-        <div class="max-h-96 overflow-auto">
+        <!-- ---- Vista en tarjetas (mobile) ---- -->
+        <div class="max-h-96 divide-y divide-slate-100 overflow-auto sm:hidden">
+            <?php if (empty($datos['stockBajo'])): ?>
+                <p class="px-4 py-10 text-center text-slate-400">Ningún producto está por debajo del mínimo.</p>
+            <?php endif; ?>
+            <?php foreach ($datos['stockBajo'] as $fila): ?>
+                <div class="flex items-center justify-between gap-3 p-4">
+                    <div class="min-w-0">
+                        <p class="truncate font-medium text-slate-800"><?= e($fila['nombre']) ?></p>
+                        <p class="text-xs text-slate-500"><?= e($fila['categoria']) ?></p>
+                    </div>
+                    <span class="shrink-0 text-sm">
+                        <span class="badge-rojo"><?= (int) $fila['stock'] ?></span>
+                        <span class="text-slate-400">de <?= (int) $fila['stock_minimo'] ?></span>
+                    </span>
+                </div>
+            <?php endforeach; ?>
+        </div>
+
+        <!-- ---- Vista en tabla (sm en adelante) ---- -->
+        <div class="hidden max-h-96 overflow-auto sm:block">
             <table class="tabla">
                 <thead class="sticky top-0">
                     <tr>

@@ -118,7 +118,27 @@ require __DIR__ . '/../components/layout_inicio.php';
                 <h2 class="font-semibold text-slate-800">Productos vendidos</h2>
             </div>
 
-            <div class="overflow-x-auto">
+            <!-- ---- Vista en tarjetas (mobile) ---- -->
+            <div class="divide-y divide-slate-100 sm:hidden">
+                <?php foreach ($detalle as $linea): ?>
+                    <div class="p-4">
+                        <div class="flex items-start justify-between gap-3">
+                            <div class="min-w-0">
+                                <p class="truncate font-medium text-slate-800"><?= e($linea['producto']) ?></p>
+                                <p class="text-xs text-slate-400"><?= e($linea['codigo_barras']) ?></p>
+                            </div>
+                            <span class="shrink-0 font-semibold text-slate-800"><?= money($linea['subtotal']) ?></span>
+                        </div>
+                        <p class="mt-1 text-xs text-slate-500">
+                            <?= (int) $linea['cantidad'] ?> <?= e(strtolower($linea['unidad_medida'])) ?>
+                            × <?= money($linea['precio_unitario']) ?>
+                        </p>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+
+            <!-- ---- Vista en tabla (sm en adelante) ---- -->
+            <div class="hidden overflow-x-auto sm:block">
                 <table class="tabla">
                     <thead>
                         <tr>
