@@ -54,8 +54,8 @@ class RecuperacionController
                 'titulo'    => 'Restablecer contraseña',
                 'saludo'    => 'Hola ' . $registro['nombre'] . ',',
                 'parrafos'  => [
-                    'Recibimos una solicitud para restablecer la contraseña de tu cuenta en ' . $nombreComercial . '.',
-                    'Si fuiste tú, hacé clic en el siguiente botón. Si no reconocés esta solicitud, podés ignorar este correo: tu contraseña no cambiará.',
+                    'Recibimos una solicitud para restablecer la contraseña de su cuenta en ' . $nombreComercial . '.',
+                    'Si fue usted, haga clic en el siguiente botón. Si no reconoce esta solicitud, puede ignorar este correo: su contraseña no cambiará.',
                 ],
                 'boton'     => ['texto' => 'Restablecer mi contraseña', 'url' => $enlace],
                 'aviso'     => 'Este enlace vence en ' . self::MINUTOS_VALIDEZ . ' minutos y solo puede usarse una vez.',
