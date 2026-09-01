@@ -15,14 +15,17 @@ USE minimarket;
 -- 1. usuarios : personal que opera el sistema
 -- ---------------------------------------------------------------------
 CREATE TABLE usuarios (
-    id_usuario   INT AUTO_INCREMENT PRIMARY KEY,
-    nombre       VARCHAR(100)  NOT NULL,
-    usuario      VARCHAR(50)   NOT NULL,
-    password     VARCHAR(255)  NOT NULL,
-    rol          ENUM('SuperAdministrador','Administrador','Cajero') NOT NULL DEFAULT 'Cajero',
-    estado       TINYINT(1)    NOT NULL DEFAULT 1,
-    created_at   TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at   TIMESTAMP     NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    id_usuario         INT AUTO_INCREMENT PRIMARY KEY,
+    nombre             VARCHAR(100)  NOT NULL,
+    usuario            VARCHAR(50)   NOT NULL,
+    password           VARCHAR(255)  NOT NULL,
+    email              VARCHAR(100)  NULL,
+    rol                ENUM('SuperAdministrador','Administrador','Cajero') NOT NULL DEFAULT 'Cajero',
+    estado             TINYINT(1)    NOT NULL DEFAULT 1,
+    reset_token_hash   VARCHAR(255)  NULL,
+    reset_token_expira DATETIME      NULL,
+    created_at         TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at         TIMESTAMP     NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT uq_usuarios_usuario UNIQUE (usuario)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

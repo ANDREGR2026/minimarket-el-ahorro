@@ -13,6 +13,8 @@ RewriteRule ^(database|models|controllers|middleware|components|lib|docs)/ - [F,
 # Autenticacion
 RewriteRule ^login/?$ pages/login.php [QSA,L]
 RewriteRule ^logout/?$ pages/logout.php [QSA,L]
+RewriteRule ^recuperar/?$ pages/recuperar.php [QSA,L]
+RewriteRule ^restablecer/?$ pages/restablecer.php [QSA,L]
 RewriteRule ^acceso-denegado/?$ pages/acceso_denegado.php [QSA,L]
 
 # Modulos principales

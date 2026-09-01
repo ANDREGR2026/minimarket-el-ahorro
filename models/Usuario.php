@@ -158,6 +158,93 @@ class Usuario
     }
 
     /**
+     * Busca un usuario activo por su correo electronico.
+     */
+    public function obtenerPorEmail($email)
+    {
+        $sql = "
+            SELECT id_usuario, nombre, usuario, email, rol, estado
+            FROM usuarios
+            WHERE email = :email AND estado = 1
+            LIMIT 1
+        ";
+
+        $stmt = $this->conexion->prepare($sql);
+        $stmt->execute([':email' => $email]);
+
+        return $stmt->fetch();
+    }
+
+    /**
+     * Guarda el hash del token de recuperacion y su fecha de expiracion.
+     * El token en claro nunca se persiste.
+     */
+    public function guardarTokenReset($idUsuario, $hashToken, $expira)
+    {
+        $stmt = $this->conexion->prepare("
+            UPDATE usuarios
+            SET reset_token_hash = :hash, reset_token_expira = :expira
+            WHERE id_usuario = :id
+        ");
+
+        return $stmt->execute([
+            ':hash'   => $hashToken,
+            ':expira' => $expira,
+            ':id'     => $idUsuario,
+        ]);
+    }
+
+    /**
+     * Busca un usuario activo por el hash del token de recuperacion,
+     * solo si aun no ha expirado.
+     */
+    public function obtenerPorTokenReset($hashToken)
+    {
+        $sql = "
+            SELECT id_usuario, nombre, usuario, email, rol, estado
+            FROM usuarios
+            WHERE reset_token_hash = :hash
+              AND reset_token_expira > NOW()
+              AND estado = 1
+            LIMIT 1
+        ";
+
+        $stmt = $this->conexion->prepare($sql);
+        $stmt->execute([':hash' => $hashToken]);
+
+        return $stmt->fetch();
+    }
+
+    /**
+     * Invalida el token de recuperacion (se usa tras restablecer o al vencer).
+     */
+    public function limpiarTokenReset($idUsuario)
+    {
+        $stmt = $this->conexion->prepare("
+            UPDATE usuarios
+            SET reset_token_hash = NULL, reset_token_expira = NULL
+            WHERE id_usuario = :id
+        ");
+
+        return $stmt->execute([':id' => $idUsuario]);
+    }
+
+    /**
+     * Cambia la contrasena de un usuario (usado por la recuperacion por email).
+     */
+    public function actualizarPassword($idUsuario, $passwordPlano)
+    {
+        $stmt = $this->conexion->prepare("
+            UPDATE usuarios SET password = :password WHERE id_usuario = :id
+        ");
+
+        return $stmt->execute([
+            ':password' => password_hash($passwordPlano, PASSWORD_DEFAULT),
+            ':id'       => $idUsuario,
+        ]);
+    }
+
+    /**
      * Cuenta cuantos administradores activos quedan.
      * Evita que el sistema se quede sin ningun administrador.
      */

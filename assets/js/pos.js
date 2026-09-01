@@ -51,7 +51,13 @@
         exitoTotal: document.getElementById('exito-total'),
         exitoVuelto: document.getElementById('exito-vuelto'),
         exitoImprimir: document.getElementById('exito-imprimir'),
-        nuevaVenta: document.getElementById('btn-nueva-venta')
+        nuevaVenta: document.getElementById('btn-nueva-venta'),
+
+        btnCamara: document.getElementById('btn-camara'),
+        modalCamara: document.getElementById('modal-camara'),
+        btnCerrarCamara: document.getElementById('btn-cerrar-camara'),
+        videoCamara: document.getElementById('video-camara'),
+        camaraMensaje: document.getElementById('camara-mensaje')
     };
 
     // ------------------------------------------------------------ utilidades
@@ -292,6 +298,83 @@
         } catch (e) {
             mostrarMensaje('No se pudo leer el código de barras.', 'error');
         }
+    }
+
+    // ------------------------------------------------------------ escaneo por cámara
+    /**
+     * Lector de código de barras/QR por cámara, usando la BarcodeDetector API
+     * nativa del navegador (Chrome/Edge en escritorio y Android). No depende
+     * de ninguna librería externa. En navegadores sin soporte (Safari,
+     * Firefox) se avisa al usuario y queda el lector físico como alternativa.
+     */
+    let streamCamara = null;
+    let detectorActivo = false;
+
+    function soportaEscaneoPorCamara() {
+        return 'BarcodeDetector' in window && navigator.mediaDevices && navigator.mediaDevices.getUserMedia;
+    }
+
+    async function abrirEscanerCamara() {
+        el.modalCamara.classList.replace('hidden', 'flex');
+        el.camaraMensaje.textContent = 'Apunte la cámara al código de barras del producto.';
+
+        if (!soportaEscaneoPorCamara()) {
+            el.camaraMensaje.textContent =
+                'Este navegador no soporta escaneo por cámara. Use un lector físico o actualice a Chrome/Edge.';
+            return;
+        }
+
+        try {
+            streamCamara = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: 'environment' }
+            });
+            el.videoCamara.srcObject = streamCamara;
+            detectorActivo = true;
+
+            const detector = new window.BarcodeDetector({
+                formats: ['ean_13', 'ean_8', 'upc_a', 'upc_e', 'code_128', 'code_39', 'qr_code']
+            });
+
+            const leerCuadro = async () => {
+                if (!detectorActivo) return;
+
+                try {
+                    const codigos = await detector.detect(el.videoCamara);
+                    if (codigos.length > 0) {
+                        const valor = codigos[0].rawValue.trim();
+                        cerrarEscanerCamara();
+                        if (valor) buscarPorCodigo(valor);
+                        return;
+                    }
+                } catch (e) {
+                    // Cuadro no legible: se reintenta con el siguiente.
+                }
+
+                if (detectorActivo) requestAnimationFrame(leerCuadro);
+            };
+
+            requestAnimationFrame(leerCuadro);
+        } catch (e) {
+            el.camaraMensaje.textContent =
+                'No se pudo acceder a la cámara. Revise los permisos del navegador.';
+        }
+    }
+
+    function cerrarEscanerCamara() {
+        detectorActivo = false;
+
+        if (streamCamara) {
+            streamCamara.getTracks().forEach(track => track.stop());
+            streamCamara = null;
+        }
+
+        el.videoCamara.srcObject = null;
+        el.modalCamara.classList.replace('flex', 'hidden');
+    }
+
+    if (el.btnCamara) {
+        el.btnCamara.addEventListener('click', abrirEscanerCamara);
+        el.btnCerrarCamara.addEventListener('click', cerrarEscanerCamara);
     }
 
     // ------------------------------------------------------------ clientes
@@ -550,6 +633,7 @@
         if (e.key === 'Escape') {
             cerrarResultados();
             el.resultadosCliente.classList.add('hidden');
+            if (streamCamara) cerrarEscanerCamara();
         }
     });
 
