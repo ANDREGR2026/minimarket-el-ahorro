@@ -93,20 +93,20 @@ require __DIR__ . '/../components/layout_inicio.php';
                 </div>
             </div>
 
-            <div class="grid grid-cols-3 gap-6 text-center">
+            <div class="grid w-full grid-cols-3 gap-3 text-center sm:w-auto sm:gap-6">
                 <div>
                     <p class="text-xs tracking-wide text-slate-400 uppercase">Stock actual</p>
-                    <p class="text-2xl font-bold <?= (int) $productoFiltro['stock'] <= (int) $productoFiltro['stock_minimo'] ? 'text-red-600' : 'text-slate-800' ?>">
+                    <p class="text-xl font-bold sm:text-2xl <?= (int) $productoFiltro['stock'] <= (int) $productoFiltro['stock_minimo'] ? 'text-red-600' : 'text-slate-800' ?>">
                         <?= (int) $productoFiltro['stock'] ?>
                     </p>
                 </div>
                 <div>
                     <p class="text-xs tracking-wide text-slate-400 uppercase">Stock mínimo</p>
-                    <p class="text-2xl font-bold text-slate-800"><?= (int) $productoFiltro['stock_minimo'] ?></p>
+                    <p class="text-xl font-bold text-slate-800 sm:text-2xl"><?= (int) $productoFiltro['stock_minimo'] ?></p>
                 </div>
                 <div>
                     <p class="text-xs tracking-wide text-slate-400 uppercase">Precio venta</p>
-                    <p class="text-2xl font-bold text-slate-800"><?= money($productoFiltro['precio_venta']) ?></p>
+                    <p class="text-xl font-bold text-slate-800 sm:text-2xl"><?= money($productoFiltro['precio_venta']) ?></p>
                 </div>
             </div>
         </div>
