@@ -181,6 +181,35 @@ class AuthTest extends TestCase
         $this->assertFalse(Auth::esAlmacenero());
     }
 
+    // ─── destinoInicial() ──────────────────────────────────────────────
+
+    public function test_destino_inicial_administrador(): void
+    {
+        $_SESSION['usuario'] = [
+            'id_usuario' => 1, 'nombre' => 'Admin',
+            'usuario' => 'admin', 'rol' => 'Administrador',
+        ];
+        $this->assertSame('dashboard', Auth::destinoInicial());
+    }
+
+    public function test_destino_inicial_almacenero(): void
+    {
+        $_SESSION['usuario'] = [
+            'id_usuario' => 4, 'nombre' => 'Almacén',
+            'usuario' => 'almacen', 'rol' => 'Almacenero',
+        ];
+        $this->assertSame('inventario', Auth::destinoInicial());
+    }
+
+    public function test_destino_inicial_cajero(): void
+    {
+        $_SESSION['usuario'] = [
+            'id_usuario' => 2, 'nombre' => 'Cajero',
+            'usuario' => 'cajero', 'rol' => 'Cajero',
+        ];
+        $this->assertSame('pos', Auth::destinoInicial());
+    }
+
     // ─── tieneRolPermitido() ─────────────────────────────────────────
 
     public function test_tiene_rol_permitido_superadministrador_hereda_administrador(): void

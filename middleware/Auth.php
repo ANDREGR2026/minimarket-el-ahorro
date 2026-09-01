@@ -90,6 +90,22 @@ class Auth
         return self::rol() === 'Almacenero';
     }
 
+    /**
+     * Ruta (sin BASE_URL) a la pantalla inicial del rol de la sesión activa.
+     */
+    public static function destinoInicial()
+    {
+        if (self::esAdministrador()) {
+            return 'dashboard';
+        }
+
+        if (self::esAlmacenero()) {
+            return 'inventario';
+        }
+
+        return 'pos';
+    }
+
     public static function invitado()
     {
         return !isset($_SESSION['usuario']);
