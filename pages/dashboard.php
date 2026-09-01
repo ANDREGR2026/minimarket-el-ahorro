@@ -18,10 +18,10 @@ require __DIR__ . '/../components/layout_inicio.php';
 
 <?php require __DIR__ . '/../components/flash.php'; ?>
 
-<div class="mb-6 flex flex-wrap items-center justify-between gap-3">
+<div class="mb-8 flex flex-wrap items-center justify-between gap-3">
     <div>
         <h2 class="text-base font-semibold text-slate-800">Hola, <?= e(explode(' ', Auth::nombre())[0]) ?></h2>
-        <p class="mt-0.5 text-sm text-slate-500">Así viene el negocio hoy.</p>
+        <p class="mt-1 text-sm text-slate-500">Resumen de hoy, <?= e(strftime_es()) ?>.</p>
     </div>
     <a href="<?= BASE_URL ?>reportes" class="btn-secundario btn-sm">
         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
