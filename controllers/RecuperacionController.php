@@ -61,7 +61,7 @@ class RecuperacionController
                 'aviso'     => 'Este enlace vence en ' . self::MINUTOS_VALIDEZ . ' minutos y solo puede usarse una vez.',
             ]);
 
-            Mailer::enviar($email, 'Restablecé tu contraseña — ' . $nombreComercial, $cuerpo);
+            Mailer::enviar($email, 'Restablezca su contraseña — ' . $nombreComercial, $cuerpo);
         }
 
         return ['ok' => true, 'mensaje' => $mensajeGenerico];
@@ -143,9 +143,9 @@ class RecuperacionController
         $botonHtml = '';
         if (!empty($datos['boton'])) {
             $botonHtml = '
-                <table role="presentation" cellpadding="0" cellspacing="0" style="margin:8px 0 24px;">
+                <table role="presentation" cellpadding="0" cellspacing="0" align="center" style="margin:8px auto 24px;">
                     <tr>
-                        <td style="border-radius:8px;background-color:#257aeb;">
+                        <td style="border-radius:8px;background-color:#257aeb;text-align:center;">
                             <a href="' . $e($datos['boton']['url']) . '"
                                 style="display:inline-block;padding:12px 28px;font-size:15px;font-weight:600;
                                        color:#ffffff;text-decoration:none;border-radius:8px;">
