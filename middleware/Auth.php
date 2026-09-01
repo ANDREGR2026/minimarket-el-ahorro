@@ -6,7 +6,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 /**
  * Control de acceso por sesión y por rol.
- * Roles del sistema: SuperAdministrador, Administrador y Cajero.
+ * Roles del sistema: SuperAdministrador, Administrador, Cajero y Almacenero.
  * SuperAdministrador es un rol único y fijo (creado por seed) que hereda
  * todo lo que puede ver y hacer un Administrador.
  */
@@ -83,6 +83,11 @@ class Auth
     public static function esSuperAdministrador()
     {
         return self::rol() === 'SuperAdministrador';
+    }
+
+    public static function esAlmacenero()
+    {
+        return self::rol() === 'Almacenero';
     }
 
     public static function invitado()

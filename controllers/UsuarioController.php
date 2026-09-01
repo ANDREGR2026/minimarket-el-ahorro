@@ -5,6 +5,7 @@ require_once __DIR__ . '/../models/Usuario.php';
 /**
  * Mantenimiento de los usuarios del sistema. Accesible a Administrador y
  * SuperAdministrador; solo este último puede conceder el rol Administrador.
+ * Administrador y SuperAdministrador pueden conceder Cajero o Almacenero.
  */
 class UsuarioController
 {
@@ -50,15 +51,18 @@ class UsuarioController
             }
         }
 
-        if ($rolActor === 'SuperAdministrador') {
-            // El SuperAdministrador decide libremente entre Cajero y Administrador
-            $rol = $rolSolicitado === 'Administrador' ? 'Administrador' : 'Cajero';
-        } elseif ($existente && $existente['rol'] === 'Administrador') {
+        // Solo un SuperAdministrador puede conceder el rol Administrador; el resto
+        // de roles asignables (Cajero, Almacenero) los concede cualquier Administrador.
+        $rolesAsignables = $rolActor === 'SuperAdministrador'
+            ? ['Cajero', 'Almacenero', 'Administrador']
+            : ['Cajero', 'Almacenero'];
+
+        if ($existente && $existente['rol'] === 'Administrador' && $rolActor !== 'SuperAdministrador') {
             // Un Administrador no puede ascender ni degradar a otro Administrador:
             // solo puede tocar sus demas datos (nombre, usuario, contrasena, estado).
             $rol = 'Administrador';
         } else {
-            $rol = 'Cajero';
+            $rol = in_array($rolSolicitado, $rolesAsignables, true) ? $rolSolicitado : 'Cajero';
         }
 
         if ($nombre === '') {

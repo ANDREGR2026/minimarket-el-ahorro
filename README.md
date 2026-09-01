@@ -100,9 +100,12 @@ http://localhost/MINIMARKET/
 |---|---|---|
 | Administrador | `admin` | `admin123` |
 | Cajero | `cajero` | `cajero123` |
+| Almacenero | `almacen` | `almacen123` |
 
 El **administrador** accede a todo el sistema. El **cajero** solo al punto de venta, a la
-consulta del catálogo, al registro de clientes y a sus propias ventas.
+consulta del catálogo, al registro de clientes y a sus propias ventas. El **almacenero** solo
+al inventario (kardex, entradas/salidas/ajustes de stock) y a la consulta del catálogo de
+productos.
 
 ---
 

@@ -33,7 +33,7 @@ function menu_items()
             'clave'  => 'productos',
             'texto'  => 'Productos',
             'ruta'   => 'productos',
-            'roles'  => ['Administrador', 'Cajero'],
+            'roles'  => ['Administrador', 'Cajero', 'Almacenero'],
             'icono'  => '<path d="M12 2 3 7v10l9 5 9-5V7l-9-5zm0 2.3 6.5 3.6L12 11.5 5.5 7.9 12 4.3zM5 9.6l6 3.3v6.5l-6-3.3V9.6zm8 9.8v-6.5l6-3.3v6.5l-6 3.3z"/>',
         ],
         [
@@ -47,7 +47,7 @@ function menu_items()
             'clave'  => 'inventario',
             'texto'  => 'Inventario',
             'ruta'   => 'inventario',
-            'roles'  => ['Administrador'],
+            'roles'  => ['Administrador', 'Almacenero'],
             'icono'  => '<path d="M20 2H4c-1.1 0-2 .9-2 2v4h2V4h16v4h2V4c0-1.1-.9-2-2-2zM4 20v-4H2v4c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2v-4h-2v4H4zM2 10h20v4H2v-4z"/>',
         ],
         [

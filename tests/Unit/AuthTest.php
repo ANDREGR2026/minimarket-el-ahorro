@@ -161,6 +161,26 @@ class AuthTest extends TestCase
         $this->assertFalse(Auth::esSuperAdministrador());
     }
 
+    // ─── esAlmacenero() ────────────────────────────────────────────────
+
+    public function test_es_almacenero_verdadero(): void
+    {
+        $_SESSION['usuario'] = [
+            'id_usuario' => 4, 'nombre' => 'Almacén',
+            'usuario' => 'almacen', 'rol' => 'Almacenero',
+        ];
+        $this->assertTrue(Auth::esAlmacenero());
+    }
+
+    public function test_es_almacenero_falso_para_cajero(): void
+    {
+        $_SESSION['usuario'] = [
+            'id_usuario' => 2, 'nombre' => 'Cajero',
+            'usuario' => 'cajero', 'rol' => 'Cajero',
+        ];
+        $this->assertFalse(Auth::esAlmacenero());
+    }
+
     // ─── tieneRolPermitido() ─────────────────────────────────────────
 
     public function test_tiene_rol_permitido_superadministrador_hereda_administrador(): void
@@ -188,6 +208,24 @@ class AuthTest extends TestCase
             'usuario' => 'cajero', 'rol' => 'Cajero',
         ];
         $this->assertTrue(Auth::tieneRolPermitido(['Administrador', 'Cajero']));
+    }
+
+    public function test_tiene_rol_permitido_almacenero_entra_a_inventario(): void
+    {
+        $_SESSION['usuario'] = [
+            'id_usuario' => 4, 'nombre' => 'Almacén',
+            'usuario' => 'almacen', 'rol' => 'Almacenero',
+        ];
+        $this->assertTrue(Auth::tieneRolPermitido(['Administrador', 'Almacenero']));
+    }
+
+    public function test_tiene_rol_permitido_almacenero_no_entra_a_solo_administrador(): void
+    {
+        $_SESSION['usuario'] = [
+            'id_usuario' => 4, 'nombre' => 'Almacén',
+            'usuario' => 'almacen', 'rol' => 'Almacenero',
+        ];
+        $this->assertFalse(Auth::tieneRolPermitido(['Administrador']));
     }
 
     // ─── logout() ────────────────────────────────────────────────────

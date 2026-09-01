@@ -173,6 +173,32 @@ class UsuarioControllerTest extends TestCase
         ], 'SuperAdministrador');
     }
 
+    public function test_guardar_administrador_actor_si_puede_crear_almacenero(): void
+    {
+        $mock = $this->createMock(Usuario::class);
+        $mock->method('usuarioExiste')->willReturn(false);
+        $mock->expects($this->once())->method('crear')
+             ->with('Juan', 'juan.perez', $this->anything(), 'Almacenero');
+
+        $controller = $this->crearController($mock);
+        $controller->guardar([
+            'nombre' => 'Juan', 'usuario' => 'juan.perez', 'password' => 'clave123', 'rol' => 'Almacenero',
+        ], 'Administrador');
+    }
+
+    public function test_guardar_superadministrador_actor_si_puede_crear_almacenero(): void
+    {
+        $mock = $this->createMock(Usuario::class);
+        $mock->method('usuarioExiste')->willReturn(false);
+        $mock->expects($this->once())->method('crear')
+             ->with('Juan', 'juan.perez', $this->anything(), 'Almacenero');
+
+        $controller = $this->crearController($mock);
+        $controller->guardar([
+            'nombre' => 'Juan', 'usuario' => 'juan.perez', 'password' => 'clave123', 'rol' => 'Almacenero',
+        ], 'SuperAdministrador');
+    }
+
     public function test_guardar_nadie_puede_crear_superadministrador(): void
     {
         $mock = $this->createMock(Usuario::class);
