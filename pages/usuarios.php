@@ -81,7 +81,77 @@ require __DIR__ . '/../components/layout_inicio.php';
 </div>
 
 <div class="tarjeta overflow-hidden">
-    <div class="overflow-x-auto">
+
+    <!-- ---- Vista en tarjetas (mobile) ---- -->
+    <div class="divide-y divide-slate-100 sm:hidden">
+        <?php if (empty($usuarios)): ?>
+            <p class="px-4 py-10 text-center text-slate-400">No hay usuarios que coincidan con la búsqueda.</p>
+        <?php endif; ?>
+
+        <?php foreach ($usuarios as $usuario): ?>
+            <?php
+            $claseRol = match ($usuario['rol']) {
+                'SuperAdministrador' => 'badge-morado',
+                'Administrador'       => 'badge-azul',
+                default               => 'badge-gris',
+            };
+            ?>
+            <div class="p-4">
+                <div class="flex items-start justify-between gap-3">
+                    <div class="min-w-0">
+                        <p class="truncate font-medium text-slate-800">
+                            <?= e($usuario['nombre']) ?>
+                            <?php if ((int) $usuario['id_usuario'] === Auth::id()): ?>
+                                <span class="badge-azul ml-1">Usted</span>
+                            <?php endif; ?>
+                        </p>
+                        <p class="font-mono text-xs text-slate-500"><?= e($usuario['usuario']) ?></p>
+                    </div>
+                    <?php if ((int) $usuario['estado'] === 1): ?>
+                        <span class="badge-verde shrink-0">Activo</span>
+                    <?php else: ?>
+                        <span class="badge-gris shrink-0">Inactivo</span>
+                    <?php endif; ?>
+                </div>
+
+                <div class="mt-2 flex items-center justify-between text-sm">
+                    <span class="<?= $claseRol ?>"><?= e($usuario['rol']) ?></span>
+                    <span class="text-xs text-slate-500">Desde <?= fecha_corta($usuario['created_at']) ?></span>
+                </div>
+
+                <div class="mt-3">
+                    <?php if ($usuario['rol'] === 'SuperAdministrador'): ?>
+                        <span class="text-xs text-slate-400">Cuenta fija</span>
+                    <?php elseif ($usuario['rol'] === 'Administrador' && !Auth::esSuperAdministrador() && (int) $usuario['id_usuario'] !== Auth::id()): ?>
+                        <span class="text-xs text-slate-400">Solo el SuperAdministrador puede editarlo</span>
+                    <?php else: ?>
+                        <div class="flex flex-wrap gap-2">
+                            <button type="button" class="btn-secundario btn-sm"
+                                onclick='editar(<?= json_encode($usuario, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'>
+                                Editar
+                            </button>
+
+                            <?php if ((int) $usuario['id_usuario'] !== Auth::id()): ?>
+                                <form method="POST" action="<?= BASE_URL ?>usuarios" class="inline">
+                                    <?= csrf_field() ?>
+                                    <input type="hidden" name="accion" value="estado">
+                                    <input type="hidden" name="id_usuario" value="<?= (int) $usuario['id_usuario'] ?>">
+                                    <input type="hidden" name="estado" value="<?= (int) $usuario['estado'] === 1 ? 0 : 1 ?>">
+                                    <button type="submit"
+                                        class="<?= (int) $usuario['estado'] === 1 ? 'btn-peligro' : 'btn-exito' ?> btn-sm">
+                                        <?= (int) $usuario['estado'] === 1 ? 'Desactivar' : 'Activar' ?>
+                                    </button>
+                                </form>
+                            <?php endif; ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+
+    <!-- ---- Vista en tabla (sm en adelante) ---- -->
+    <div class="hidden overflow-x-auto sm:block">
         <table class="tabla">
             <thead>
                 <tr>

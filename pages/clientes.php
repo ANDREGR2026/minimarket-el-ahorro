@@ -77,7 +77,71 @@ require __DIR__ . '/../components/layout_inicio.php';
 </div>
 
 <div class="tarjeta overflow-hidden">
-    <div class="overflow-x-auto">
+
+    <!-- ---- Vista en tarjetas (mobile) ---- -->
+    <div class="divide-y divide-slate-100 sm:hidden">
+        <?php if (empty($clientes)): ?>
+            <p class="px-4 py-10 text-center text-slate-400">No se encontraron clientes con esos filtros.</p>
+        <?php endif; ?>
+
+        <?php foreach ($clientes as $cliente): ?>
+            <div class="p-4">
+                <div class="flex items-start justify-between gap-3">
+                    <div class="min-w-0">
+                        <p class="truncate font-medium text-slate-800"><?= e($cliente['nombre_completo']) ?></p>
+                        <p class="text-xs text-slate-400">
+                            <span class="<?= $cliente['tipo_documento'] === 'RUC' ? 'badge-azul' : 'badge-gris' ?>">
+                                <?= e($cliente['tipo_documento']) ?>
+                            </span>
+                            <span class="font-mono"><?= e($cliente['numero_documento']) ?></span>
+                        </p>
+                    </div>
+                    <?php if ((int) $cliente['estado'] === 1): ?>
+                        <span class="badge-verde shrink-0">Activo</span>
+                    <?php else: ?>
+                        <span class="badge-gris shrink-0">Inactivo</span>
+                    <?php endif; ?>
+                </div>
+
+                <?php if (!empty($cliente['telefono']) || !empty($cliente['email'])): ?>
+                    <p class="mt-2 text-xs text-slate-500">
+                        <?= e($cliente['telefono'] ?: '') ?>
+                        <?php if (!empty($cliente['email'])): ?>
+                            <?= !empty($cliente['telefono']) ? ' · ' : '' ?><?= e($cliente['email']) ?>
+                        <?php endif; ?>
+                    </p>
+                <?php endif; ?>
+
+                <div class="mt-2 flex items-center justify-between text-sm">
+                    <span class="text-slate-500"><?= (int) $cliente['total_compras'] ?> compra(s)</span>
+                    <span class="font-medium text-slate-700"><?= money($cliente['monto_comprado']) ?></span>
+                </div>
+
+                <div class="mt-3 flex flex-wrap gap-2">
+                    <button type="button" class="btn-secundario btn-sm"
+                        onclick='editar(<?= json_encode($cliente, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'>
+                        Editar
+                    </button>
+
+                    <?php if (Auth::esAdministrador()): ?>
+                        <form method="POST" action="<?= BASE_URL ?>clientes" class="inline">
+                            <?= csrf_field() ?>
+                            <input type="hidden" name="accion" value="estado">
+                            <input type="hidden" name="id_cliente" value="<?= (int) $cliente['id_cliente'] ?>">
+                            <input type="hidden" name="estado" value="<?= (int) $cliente['estado'] === 1 ? 0 : 1 ?>">
+                            <button type="submit"
+                                class="<?= (int) $cliente['estado'] === 1 ? 'btn-peligro' : 'btn-exito' ?> btn-sm">
+                                <?= (int) $cliente['estado'] === 1 ? 'Desactivar' : 'Activar' ?>
+                            </button>
+                        </form>
+                    <?php endif; ?>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+
+    <!-- ---- Vista en tabla (sm en adelante) ---- -->
+    <div class="hidden overflow-x-auto sm:block">
         <table class="tabla">
             <thead>
                 <tr>

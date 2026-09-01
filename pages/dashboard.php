@@ -118,7 +118,30 @@ require __DIR__ . '/../components/layout_inicio.php';
                 class="text-xs font-medium text-marca-600 hover:text-marca-700">Ver todos</a>
         </div>
 
-        <div class="overflow-x-auto">
+        <!-- ---- Vista en tarjetas (mobile) ---- -->
+        <div class="divide-y divide-slate-100 sm:hidden">
+            <?php if (empty($datos['stockBajo'])): ?>
+                <p class="px-4 py-10 text-center text-slate-400">Ningún producto está por debajo del mínimo.</p>
+            <?php endif; ?>
+
+            <?php foreach ($datos['stockBajo'] as $producto): ?>
+                <div class="flex items-center justify-between gap-3 p-4">
+                    <div class="min-w-0">
+                        <p class="truncate font-medium text-slate-800"><?= e($producto['nombre']) ?></p>
+                        <p class="text-xs text-slate-500">
+                            <?= e($producto['categoria']) ?> ·
+                            <span class="badge-rojo"><?= (int) $producto['stock'] ?></span>
+                            de mín. <?= (int) $producto['stock_minimo'] ?>
+                        </p>
+                    </div>
+                    <a href="<?= BASE_URL ?>inventario?id_producto=<?= (int) $producto['id_producto'] ?>"
+                        class="btn-secundario btn-sm shrink-0">Reponer</a>
+                </div>
+            <?php endforeach; ?>
+        </div>
+
+        <!-- ---- Vista en tabla (sm en adelante) ---- -->
+        <div class="hidden overflow-x-auto sm:block">
             <table class="tabla">
                 <thead>
                     <tr>
@@ -167,7 +190,36 @@ require __DIR__ . '/../components/layout_inicio.php';
         </a>
     </div>
 
-    <div class="overflow-x-auto">
+    <!-- ---- Vista en tarjetas (mobile) ---- -->
+    <div class="divide-y divide-slate-100 sm:hidden">
+        <?php if (empty($datos['ultimasVentas'])): ?>
+            <p class="px-4 py-10 text-center text-slate-400">Todavía no se han registrado ventas.</p>
+        <?php endif; ?>
+
+        <?php foreach ($datos['ultimasVentas'] as $venta): ?>
+            <div class="p-4">
+                <div class="flex items-start justify-between gap-3">
+                    <div class="min-w-0">
+                        <p class="truncate font-mono text-sm font-medium text-slate-800"><?= e($venta['comprobante']) ?></p>
+                        <p class="text-xs text-slate-500"><?= fecha_hora($venta['fecha']) ?> · <?= e($venta['cajero']) ?></p>
+                    </div>
+                    <?php if ($venta['estado'] === 'EMITIDA'): ?>
+                        <span class="badge-verde shrink-0">Emitida</span>
+                    <?php else: ?>
+                        <span class="badge-rojo shrink-0">Anulada</span>
+                    <?php endif; ?>
+                </div>
+                <div class="mt-2 flex items-center justify-between">
+                    <span class="font-semibold text-slate-800"><?= money($venta['total']) ?></span>
+                    <a href="<?= BASE_URL ?>venta/<?= (int) $venta['id_venta'] ?>"
+                        class="btn-secundario btn-sm">Ver</a>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+
+    <!-- ---- Vista en tabla (sm en adelante) ---- -->
+    <div class="hidden overflow-x-auto sm:block">
         <table class="tabla">
             <thead>
                 <tr>

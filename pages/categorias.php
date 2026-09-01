@@ -61,7 +61,62 @@ require __DIR__ . '/../components/layout_inicio.php';
 </div>
 
 <div class="tarjeta overflow-hidden">
-    <div class="overflow-x-auto">
+
+    <!-- ---- Vista en tarjetas (mobile) ---- -->
+    <div class="divide-y divide-slate-100 sm:hidden">
+        <?php if (empty($categorias)): ?>
+            <p class="px-4 py-10 text-center text-slate-400">No hay categorías que coincidan con la búsqueda.</p>
+        <?php endif; ?>
+
+        <?php foreach ($categorias as $categoria): ?>
+            <div class="p-4">
+                <div class="flex items-start justify-between gap-3">
+                    <div class="min-w-0">
+                        <p class="truncate font-medium text-slate-800"><?= e($categoria['nombre']) ?></p>
+                        <p class="text-xs text-slate-500"><?= e($categoria['descripcion'] ?: 'Sin descripción') ?></p>
+                    </div>
+                    <?php if ((int) $categoria['estado'] === 1): ?>
+                        <span class="badge-verde shrink-0">Activa</span>
+                    <?php else: ?>
+                        <span class="badge-gris shrink-0">Inactiva</span>
+                    <?php endif; ?>
+                </div>
+
+                <div class="mt-2 text-sm">
+                    <span class="text-slate-500">Productos:</span>
+                    <?php if ((int) $categoria['total_productos'] > 0): ?>
+                        <a href="<?= BASE_URL ?>productos?categoria=<?= (int) $categoria['id_categoria'] ?>"
+                            class="font-medium text-marca-600 hover:text-marca-700">
+                            <?= (int) $categoria['total_productos'] ?>
+                        </a>
+                    <?php else: ?>
+                        <span class="text-slate-400">0</span>
+                    <?php endif; ?>
+                </div>
+
+                <div class="mt-3 flex flex-wrap gap-2">
+                    <button type="button" class="btn-secundario btn-sm"
+                        onclick='editar(<?= json_encode($categoria, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'>
+                        Editar
+                    </button>
+
+                    <form method="POST" action="<?= BASE_URL ?>categorias" class="inline">
+                        <?= csrf_field() ?>
+                        <input type="hidden" name="accion" value="estado">
+                        <input type="hidden" name="id_categoria" value="<?= (int) $categoria['id_categoria'] ?>">
+                        <input type="hidden" name="estado" value="<?= (int) $categoria['estado'] === 1 ? 0 : 1 ?>">
+                        <button type="submit"
+                            class="<?= (int) $categoria['estado'] === 1 ? 'btn-peligro' : 'btn-exito' ?> btn-sm">
+                            <?= (int) $categoria['estado'] === 1 ? 'Desactivar' : 'Activar' ?>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+
+    <!-- ---- Vista en tabla (sm en adelante) ---- -->
+    <div class="hidden overflow-x-auto sm:block">
         <table class="tabla">
             <thead>
                 <tr>

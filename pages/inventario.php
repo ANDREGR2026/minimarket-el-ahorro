@@ -72,21 +72,21 @@ require __DIR__ . '/../components/layout_inicio.php';
     <!-- ===================== Ficha del producto ===================== -->
     <div class="tarjeta mb-5 p-5">
         <div class="flex flex-wrap items-start justify-between gap-4">
-            <div class="flex items-center gap-4">
+            <div class="flex min-w-0 items-center gap-4">
                 <?php if (!empty($productoFiltro['imagen'])): ?>
                     <img src="<?= BASE_URL ?>assets/img/productos/<?= e($productoFiltro['imagen']) ?>"
-                        alt="" class="h-16 w-16 rounded-xl object-cover ring-1 ring-slate-200">
+                        alt="" class="h-16 w-16 shrink-0 rounded-xl object-cover ring-1 ring-slate-200">
                 <?php else: ?>
-                    <span class="flex h-16 w-16 items-center justify-center rounded-xl bg-slate-100 text-slate-400">
+                    <span class="flex h-16 w-16 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-400">
                         <svg class="h-7 w-7" viewBox="0 0 24 24" fill="currentColor">
                             <path d="M12 2 3 7v10l9 5 9-5V7l-9-5z" />
                         </svg>
                     </span>
                 <?php endif; ?>
 
-                <div>
-                    <h2 class="text-lg font-semibold text-slate-800"><?= e($productoFiltro['nombre']) ?></h2>
-                    <p class="text-sm text-slate-500">
+                <div class="min-w-0">
+                    <h2 class="truncate text-lg font-semibold text-slate-800"><?= e($productoFiltro['nombre']) ?></h2>
+                    <p class="truncate text-sm text-slate-500">
                         <?= e($productoFiltro['categoria']) ?> ·
                         <span class="font-mono text-xs"><?= e($productoFiltro['codigo_barras']) ?></span>
                     </p>
@@ -213,8 +213,67 @@ require __DIR__ . '/../components/layout_inicio.php';
             <h3 class="mb-3 font-semibold text-slate-800">Kardex del producto</h3>
         <?php endif; ?>
 
+        <?php
+        $clasesTipo = [
+            'ENTRADA' => 'badge-verde',
+            'SALIDA'  => 'badge-rojo',
+            'AJUSTE'  => 'badge-ambar',
+        ];
+        ?>
+
         <div class="tarjeta overflow-hidden">
-            <div class="max-h-[560px] overflow-auto">
+
+            <!-- ---- Vista en tarjetas (mobile) ---- -->
+            <div class="max-h-[560px] divide-y divide-slate-100 overflow-auto sm:hidden">
+                <?php if (empty($movimientos)): ?>
+                    <p class="px-4 py-10 text-center text-slate-400">
+                        Todavía no hay movimientos de inventario registrados.
+                    </p>
+                <?php endif; ?>
+
+                <?php foreach ($movimientos as $movimiento): ?>
+                    <div class="p-4">
+                        <div class="flex items-start justify-between gap-3">
+                            <div class="min-w-0">
+                                <?php if (!$productoFiltro): ?>
+                                    <p class="truncate text-sm font-medium text-slate-800"><?= e($movimiento['producto']) ?></p>
+                                <?php endif; ?>
+                                <p class="text-xs text-slate-400"><?= fecha_hora($movimiento['fecha']) ?></p>
+                            </div>
+                            <span class="<?= $clasesTipo[$movimiento['tipo']] ?> shrink-0">
+                                <?= ucfirst(strtolower($movimiento['tipo'])) ?>
+                            </span>
+                        </div>
+
+                        <div class="mt-3 flex items-center justify-between text-sm">
+                            <span class="text-slate-500">Cantidad</span>
+                            <span class="font-semibold text-slate-800">
+                                <?= $movimiento['tipo'] === 'SALIDA' ? '−' : '+' ?><?= (int) $movimiento['cantidad'] ?>
+                            </span>
+                        </div>
+
+                        <div class="mt-1 flex items-center justify-between text-sm">
+                            <span class="text-slate-500">Stock</span>
+                            <span class="text-xs text-slate-500">
+                                <?= (int) $movimiento['stock_anterior'] ?> &rarr;
+                                <strong class="text-slate-700"><?= (int) $movimiento['stock_nuevo'] ?></strong>
+                            </span>
+                        </div>
+
+                        <p class="mt-2 text-xs text-slate-500">
+                            <?= e($movimiento['motivo']) ?>
+                            <?php if ($productoFiltro && !empty($movimiento['id_venta'])): ?>
+                                <a href="<?= BASE_URL ?>venta/<?= (int) $movimiento['id_venta'] ?>"
+                                    class="ml-1 font-medium text-marca-600 hover:text-marca-700">ver venta</a>
+                            <?php endif; ?>
+                        </p>
+                        <p class="mt-1 text-xs text-slate-400">Registró: <?= e($movimiento['usuario']) ?></p>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+
+            <!-- ---- Vista en tabla (sm en adelante) ---- -->
+            <div class="hidden max-h-[560px] overflow-auto sm:block">
                 <table class="tabla">
                     <thead class="sticky top-0">
                         <tr>
@@ -245,13 +304,6 @@ require __DIR__ . '/../components/layout_inicio.php';
                                     <td class="font-medium text-slate-800"><?= e($movimiento['producto']) ?></td>
                                 <?php endif; ?>
                                 <td class="text-center">
-                                    <?php
-                                    $clasesTipo = [
-                                        'ENTRADA' => 'badge-verde',
-                                        'SALIDA'  => 'badge-rojo',
-                                        'AJUSTE'  => 'badge-ambar',
-                                    ];
-                                    ?>
                                     <span class="<?= $clasesTipo[$movimiento['tipo']] ?>">
                                         <?= ucfirst(strtolower($movimiento['tipo'])) ?>
                                     </span>
