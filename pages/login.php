@@ -69,35 +69,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     de gestión en una sola plataforma.
                 </p>
 
-                <div class="mt-9 grid max-w-md grid-cols-2 gap-3.5">
-                    <div class="flex flex-col gap-3 rounded-2xl bg-white/10 p-5">
-                        <svg width="22" height="22" class="shrink-0" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M6 9h12l-1.2 9.6a2 2 0 0 1-2 1.9H9.2a2 2 0 0 1-2-1.9L6 9Z" />
-                            <path d="M9 9V7a3 3 0 0 1 6 0v2" />
-                            <path d="M4 9h16" />
-                        </svg>
-                        <div>
-                            <p class="text-base font-bold text-white">POS</p>
-                            <p class="mt-0.5 text-xs text-marca-100">Ventas con boleta y factura</p>
-                        </div>
-                    </div>
-                    <div class="flex flex-col gap-3 rounded-2xl bg-white/10 p-5">
-                        <svg width="22" height="22" class="shrink-0" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M3.5 7.5 12 3l8.5 4.5v9L12 21l-8.5-4.5v-9Z" />
-                            <path d="M3.5 7.5 12 12l8.5-4.5" />
-                            <path d="M12 12v9" />
-                        </svg>
-                        <div>
-                            <p class="text-base font-bold text-white">Kardex</p>
-                            <p class="mt-0.5 text-xs text-marca-100">Stock siempre actualizado</p>
-                        </div>
-                    </div>
-                </div>
             </div>
 
-            <p class="relative text-sm text-marca-200">
-                Curso de Desarrollo de Sistemas de Información
-            </p>
+            <!-- Spacer para centrar el texto con justify-between -->
+            <div></div>
         </div>
 
         <!-- Formulario -->
@@ -133,7 +108,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
 
                     <div>
-                        <label for="password" class="etiqueta">Contraseña</label>
+                        <div class="flex items-center justify-between">
+                            <label for="password" class="etiqueta">Contraseña</label>
+                            <a href="<?= BASE_URL ?>recuperar" class="text-xs font-medium text-marca-600 hover:text-marca-700">
+                                ¿Olvidó su contraseña?
+                            </a>
+                        </div>
                         <div class="relative">
                             <input type="password" id="password" name="password" class="campo pr-11"
                                 placeholder="••••••••" required>

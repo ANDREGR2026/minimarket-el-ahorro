@@ -74,6 +74,16 @@ DB_USER=root
 DB_PASS=
 ```
 
+### 4b. Configurar el correo (opcional, para "olvidé mi contraseña")
+
+El mismo `.env` acepta variables `MAIL_*` para el envío del correo de recuperación de
+contraseña (ver `.env.example`). Sin PHPMailer instalado, el sistema usa la función `mail()`
+nativa de PHP como respaldo. Para enviar por SMTP (Gmail, Mailtrap, etc.) instale PHPMailer:
+
+```bash
+composer require phpmailer/phpmailer
+```
+
 ### 5. Abrir el sistema
 
 Inicie Apache y MySQL desde Laragon y visite:
@@ -235,3 +245,8 @@ generan una fila en el kardex con el stock anterior y el nuevo.
 - No incluye módulo de compras ni de órdenes a proveedores.
 - No maneja ventas al crédito ni cuentas por cobrar.
 - Está pensado para un solo local y una sola caja.
+- El escaneo de código de barras/QR por cámara usa la `BarcodeDetector` nativa del navegador
+  (Chrome/Edge); en navegadores sin soporte (Safari, Firefox) use un lector físico USB, que
+  sigue funcionando igual que antes.
+- El correo de recuperación de contraseña requiere conexión a internet solo si se configura
+  un servidor SMTP externo (Gmail, etc.); el resto del sistema sigue funcionando sin ella.

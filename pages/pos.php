@@ -41,13 +41,22 @@ require __DIR__ . '/../components/layout_inicio.php';
             <label for="buscador" class="etiqueta">
                 Buscar producto o escanear código de barras
             </label>
-            <div class="relative">
-                <input type="text" id="buscador" class="campo py-2.5 pl-10"
-                    placeholder="Escriba el nombre o escanee el código..." autocomplete="off" autofocus>
-                <svg class="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-slate-400"
-                    viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 10-.7.7l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0a4.5 4.5 0 110-9 4.5 4.5 0 010 9z" />
-                </svg>
+            <div class="flex gap-2">
+                <div class="relative flex-1">
+                    <input type="text" id="buscador" class="campo py-2.5 pl-10"
+                        placeholder="Escriba el nombre o escanee el código..." autocomplete="off" autofocus>
+                    <svg class="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-slate-400"
+                        viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 10-.7.7l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0a4.5 4.5 0 110-9 4.5 4.5 0 010 9z" />
+                    </svg>
+                </div>
+                <button type="button" id="btn-camara" title="Escanear con cámara"
+                    class="btn-secundario flex items-center gap-1.5 px-3">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M9.4 4 7.8 6H4a2 2 0 00-2 2v10a2 2 0 002 2h16a2 2 0 002-2V8a2 2 0 00-2-2h-3.8L14.6 4H9.4zM12 9a5 5 0 110 10 5 5 0 010-10zm0 2a3 3 0 100 6 3 3 0 000-6z" />
+                    </svg>
+                    <span class="hidden sm:inline">Cámara</span>
+                </button>
             </div>
 
             <!-- Resultados de la búsqueda -->
@@ -197,6 +206,26 @@ require __DIR__ . '/../components/layout_inicio.php';
                 <p id="mensaje-venta" class="mt-2 hidden text-center text-xs font-medium"></p>
             </div>
         </div>
+    </div>
+</div>
+
+<!-- ===================== Modal de escaneo por cámara ===================== -->
+<div id="modal-camara" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/50 p-4">
+    <div class="tarjeta w-full max-w-sm overflow-hidden p-0">
+        <div class="flex items-center justify-between border-b border-slate-200 px-5 py-3">
+            <h2 class="font-semibold text-slate-800">Escanear código de barras</h2>
+            <button type="button" id="btn-cerrar-camara" class="text-slate-400 hover:text-slate-600" aria-label="Cerrar">
+                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M18.3 5.71 12 12l6.3 6.29-1.41 1.42L10.59 13.4 4.3 19.7l-1.41-1.42L8.59 12 2.3 5.71 3.71 4.3 10 10.59l6.29-6.29z" />
+                </svg>
+            </button>
+        </div>
+        <div class="relative bg-slate-900">
+            <video id="video-camara" class="aspect-square w-full object-cover" playsinline autoplay muted></video>
+        </div>
+        <p id="camara-mensaje" class="px-5 py-3 text-center text-xs text-slate-500">
+            Apunte la cámara al código de barras del producto.
+        </p>
     </div>
 </div>
 
