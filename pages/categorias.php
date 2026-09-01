@@ -43,9 +43,9 @@ require __DIR__ . '/../components/layout_inicio.php';
 <p class="mb-4 text-sm text-slate-500">Organización del catálogo. Cada producto pertenece a una categoría.</p>
 
 <div class="mb-5 flex flex-wrap items-center justify-between gap-3">
-    <form method="GET" action="<?= BASE_URL ?>categorias" class="flex gap-2">
+    <form method="GET" action="<?= BASE_URL ?>categorias" class="flex flex-wrap gap-2">
         <input type="search" name="q" value="<?= e($busqueda) ?>"
-            class="campo w-64" placeholder="Buscar categoría...">
+            class="campo w-full sm:w-64" placeholder="Buscar categoría...">
         <button type="submit" class="btn-secundario">Buscar</button>
         <?php if ($busqueda !== ''): ?>
             <a href="<?= BASE_URL ?>categorias" class="btn-secundario">Limpiar</a>

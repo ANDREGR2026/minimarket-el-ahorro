@@ -42,7 +42,7 @@ require __DIR__ . '/../components/layout_inicio.php';
                 Buscar producto o escanear código de barras
             </label>
             <div class="flex gap-2">
-                <div class="relative flex-1">
+                <div class="relative min-w-0 flex-1">
                     <input type="text" id="buscador" class="campo py-2.5 pl-10"
                         placeholder="Escriba el nombre o escanee el código..." autocomplete="off" autofocus>
                     <svg class="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-slate-400"
@@ -99,7 +99,7 @@ require __DIR__ . '/../components/layout_inicio.php';
          Columna derecha: cliente, comprobante y cobro
          ============================================================ -->
     <div class="lg:col-span-2">
-        <div class="tarjeta sticky top-20">
+        <div class="tarjeta lg:sticky lg:top-20">
 
             <div class="border-b border-slate-200 px-5 py-4">
                 <h2 class="font-semibold text-slate-800">Datos del comprobante</h2>
