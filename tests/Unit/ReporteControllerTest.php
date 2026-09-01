@@ -136,15 +136,20 @@ class ReporteControllerTest extends TestCase
 
     public function test_rango_rechaza_fecha_con_formato_invalido(): void
     {
-        [$desde, $hasta] = ReporteController::rango('25-08-2026', '2026-08-27');
+        // "Hasta" es la fecha de hoy: siempre valida y siempre >= al primer
+        // dia del mes actual, para que el fallback de "desde" no dispare la
+        // inversion de fechas (ver test_rango_invierte_fechas_si_estan_al_reves).
+        $hoy = date('Y-m-d');
+        [$desde, $hasta] = ReporteController::rango('25-08-2026', $hoy);
 
         $this->assertEquals(date('Y-m-01'), $desde); // cae al default
-        $this->assertEquals('2026-08-27', $hasta);
+        $this->assertEquals($hoy, $hasta);
     }
 
     public function test_rango_rechaza_fecha_inexistente(): void
     {
-        [$desde, ] = ReporteController::rango('2026-02-30', '2026-08-27');
+        $hoy = date('Y-m-d');
+        [$desde, ] = ReporteController::rango('2026-02-30', $hoy);
 
         $this->assertEquals(date('Y-m-01'), $desde); // 30 de febrero no existe
     }
