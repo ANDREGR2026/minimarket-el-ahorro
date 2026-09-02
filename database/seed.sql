@@ -22,7 +22,9 @@ INSERT INTO configuracion (clave, valor, descripcion) VALUES
 ('direccion',    'Av. Los Proceres 458, Lima',   'Direccion fiscal'),
 ('telefono',     '01 4567890',                   'Telefono de contacto'),
 ('igv',          '18',                           'Porcentaje de IGV vigente'),
-('moneda',       'S/',                           'Simbolo de la moneda');
+('moneda',       'S/',                           'Simbolo de la moneda'),
+('backup_frecuencia', 'Semanal',                 'Frecuencia del backup automatico: Desactivado, Diario, Semanal o Mensual'),
+('backup_conservar',  '10',                      'Cantidad de backups a conservar antes de borrar el mas antiguo');
 
 -- ---------------------------------------------------------------------
 -- Usuarios

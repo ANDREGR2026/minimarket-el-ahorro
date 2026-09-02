@@ -89,6 +89,23 @@ function money($monto)
 }
 
 /**
+ * Formatea un tamaño en bytes como texto legible (KB, MB...).
+ */
+function tamano_legible($bytes)
+{
+    $bytes = (float) $bytes;
+    $unidades = ['B', 'KB', 'MB', 'GB'];
+
+    $indice = 0;
+    while ($bytes >= 1024 && $indice < count($unidades) - 1) {
+        $bytes /= 1024;
+        $indice++;
+    }
+
+    return number_format($bytes, $indice === 0 ? 0 : 1) . ' ' . $unidades[$indice];
+}
+
+/**
  * Genera y valida el token CSRF de la sesión.
  */
 function csrf_token()

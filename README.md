@@ -4,7 +4,7 @@ Proyecto final del curso **Desarrollo de Sistemas de Información**.
 
 Sistema web para administrar la operación diaria de un minimarket: punto de venta con
 emisión de boleta y factura, control de catálogo e inventario con kardex, registro de
-clientes, y reportes de gestión.
+clientes, reportes de gestión y backups configurables de la base de datos.
 
 ---
 
