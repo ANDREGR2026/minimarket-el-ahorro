@@ -15,6 +15,14 @@ $titulo = $titulo ?? 'Minimarket';
 $activo = $activo ?? '';
 $__rolActual = Auth::rol();
 $__nombreComercial = (new Configuracion())->obtener('nombre_comercial', 'EL AHORRO');
+
+// El backup automatico no depende de un cron del sistema operativo: se
+// revisa de paso en cada pantalla que abre un administrador, y si segun la
+// frecuencia configurada ya toca, se genera en silencio.
+if (Auth::esAdministrador()) {
+    require_once __DIR__ . '/../controllers/BackupController.php';
+    (new BackupController())->ejecutarSiCorresponde();
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">

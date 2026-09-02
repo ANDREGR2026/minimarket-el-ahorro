@@ -140,6 +140,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <p><span class="badge-morado">SuperAdmin</span> superadmin / super123</p>
                         <p><span class="badge-azul">Administrador</span> admin / admin123</p>
                         <p><span class="badge-gris">Cajero</span> cajero / cajero123</p>
+                        <p><span class="badge-ambar">Almacenero</span> almacen / almacen123</p>
                     </div>
                 </div>
             </div>

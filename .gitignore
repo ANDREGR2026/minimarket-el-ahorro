@@ -2,6 +2,8 @@
 storage/comprobantes/*.pdf
 assets/img/productos/*
 !assets/img/productos/.gitkeep
+storage/backups/*.sql
+!storage/backups/.gitkeep
 node_modules/
 vendor/
 .phpunit.cache/

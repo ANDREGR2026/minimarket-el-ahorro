@@ -10,6 +10,10 @@ Options -Indexes
 RewriteRule ^(\.env|\.env\.example|\.gitignore) - [F,L]
 RewriteRule ^(database|models|controllers|middleware|components|lib|docs)/ - [F,L]
 
+# Los .sql de storage/backups/ solo se descargan a traves de BackupController
+# (que valida el rol); el acceso directo por URL queda bloqueado.
+RewriteRule ^storage/backups/.+\.sql$ - [F,L]
+
 # Autenticacion
 RewriteRule ^login/?$ pages/login.php [QSA,L]
 RewriteRule ^logout/?$ pages/logout.php [QSA,L]
@@ -29,6 +33,7 @@ RewriteRule ^venta/([0-9]+)/?$ pages/detalle_venta.php?id=$1 [QSA,L]
 RewriteRule ^comprobante/([0-9]+)/?$ pages/comprobante.php?id=$1 [QSA,L]
 RewriteRule ^reportes/?$ pages/reportes.php [QSA,L]
 RewriteRule ^usuarios/?$ pages/usuarios.php [QSA,L]
+RewriteRule ^backups/?$ pages/backups.php [QSA,L]
 RewriteRule ^exportar/?$ pages/exportar.php [QSA,L]
 
 # Endpoints internos (JSON) usados por el punto de venta
