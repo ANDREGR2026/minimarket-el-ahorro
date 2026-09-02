@@ -16,6 +16,7 @@ flowchart TB
         end
 
         ALMACEN["📁 storage/comprobantes<br/>PDF emitidos"]
+        BACKUPS["📁 storage/backups<br/>Backups .sql de la BD"]
         IMAGENES["📁 assets/img/productos<br/>Imágenes del catálogo"]
     end
 
@@ -23,6 +24,7 @@ flowchart TB
     HTACCESS --> PHP
     PHP -->|"PDO<br/>puerto 3306"| BD
     PHP --> ALMACEN
+    PHP --> BACKUPS
     PHP --> IMAGENES
     PHP -->|"PDF"| NAV
     LECTOR -.->|"código de barras"| NAV
