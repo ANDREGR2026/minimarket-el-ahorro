@@ -8,6 +8,8 @@ require_once __DIR__ . '/../controllers/CategoriaController.php';
 Auth::checkRole(['Administrador', 'Cajero', 'Almacenero']);
 
 $esAdmin     = Auth::esAdministrador();
+// El almacenero no edita el catálogo, pero sí necesita llegar al kardex de cada producto
+$verKardex   = $esAdmin || Auth::esAlmacenero();
 $controlador = new ProductoController();
 $categorias  = (new CategoriaController())->activas();
 
@@ -154,26 +156,28 @@ require __DIR__ . '/../components/layout_inicio.php';
                     </span>
                 </div>
 
-                <?php if ($esAdmin): ?>
+                <?php if ($verKardex): ?>
                     <div class="mt-3 flex flex-wrap gap-2">
                         <a href="<?= BASE_URL ?>inventario?id_producto=<?= (int) $producto['id_producto'] ?>"
                             class="btn-secundario btn-sm">Kardex</a>
 
-                        <button type="button" class="btn-secundario btn-sm"
-                            onclick='editar(<?= json_encode($producto, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'>
-                            Editar
-                        </button>
-
-                        <form method="POST" action="<?= BASE_URL ?>productos" class="inline">
-                            <?= csrf_field() ?>
-                            <input type="hidden" name="accion" value="estado">
-                            <input type="hidden" name="id_producto" value="<?= (int) $producto['id_producto'] ?>">
-                            <input type="hidden" name="estado" value="<?= (int) $producto['estado'] === 1 ? 0 : 1 ?>">
-                            <button type="submit"
-                                class="<?= (int) $producto['estado'] === 1 ? 'btn-peligro' : 'btn-exito' ?> btn-sm">
-                                <?= (int) $producto['estado'] === 1 ? 'Desactivar' : 'Activar' ?>
+                        <?php if ($esAdmin): ?>
+                            <button type="button" class="btn-secundario btn-sm"
+                                onclick='editar(<?= json_encode($producto, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'>
+                                Editar
                             </button>
-                        </form>
+
+                            <form method="POST" action="<?= BASE_URL ?>productos" class="inline">
+                                <?= csrf_field() ?>
+                                <input type="hidden" name="accion" value="estado">
+                                <input type="hidden" name="id_producto" value="<?= (int) $producto['id_producto'] ?>">
+                                <input type="hidden" name="estado" value="<?= (int) $producto['estado'] === 1 ? 0 : 1 ?>">
+                                <button type="submit"
+                                    class="<?= (int) $producto['estado'] === 1 ? 'btn-peligro' : 'btn-exito' ?> btn-sm">
+                                    <?= (int) $producto['estado'] === 1 ? 'Desactivar' : 'Activar' ?>
+                                </button>
+                            </form>
+                        <?php endif; ?>
                     </div>
                 <?php endif; ?>
             </div>
@@ -191,13 +195,13 @@ require __DIR__ . '/../components/layout_inicio.php';
                     <th class="text-right">P. Venta</th>
                     <th class="text-center">Stock</th>
                     <th class="text-center">Estado</th>
-                    <?php if ($esAdmin): ?><th class="text-right">Acciones</th><?php endif; ?>
+                    <?php if ($verKardex): ?><th class="text-right">Acciones</th><?php endif; ?>
                 </tr>
             </thead>
             <tbody>
                 <?php if (empty($productos)): ?>
                     <tr>
-                        <td colspan="<?= $esAdmin ? 7 : 6 ?>" class="px-4 py-10 text-center text-slate-400">
+                        <td colspan="<?= $verKardex ? 7 : 6 ?>" class="px-4 py-10 text-center text-slate-400">
                             No se encontraron productos con esos filtros.
                         </td>
                     </tr>
@@ -240,26 +244,28 @@ require __DIR__ . '/../components/layout_inicio.php';
                                 <span class="badge-gris">Inactivo</span>
                             <?php endif; ?>
                         </td>
-                        <?php if ($esAdmin): ?>
+                        <?php if ($verKardex): ?>
                             <td class="text-right whitespace-nowrap">
                                 <a href="<?= BASE_URL ?>inventario?id_producto=<?= (int) $producto['id_producto'] ?>"
                                     class="btn-secundario btn-sm">Kardex</a>
 
-                                <button type="button" class="btn-secundario btn-sm"
-                                    onclick='editar(<?= json_encode($producto, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'>
-                                    Editar
-                                </button>
-
-                                <form method="POST" action="<?= BASE_URL ?>productos" class="inline">
-                                    <?= csrf_field() ?>
-                                    <input type="hidden" name="accion" value="estado">
-                                    <input type="hidden" name="id_producto" value="<?= (int) $producto['id_producto'] ?>">
-                                    <input type="hidden" name="estado" value="<?= (int) $producto['estado'] === 1 ? 0 : 1 ?>">
-                                    <button type="submit"
-                                        class="<?= (int) $producto['estado'] === 1 ? 'btn-peligro' : 'btn-exito' ?> btn-sm">
-                                        <?= (int) $producto['estado'] === 1 ? 'Desactivar' : 'Activar' ?>
+                                <?php if ($esAdmin): ?>
+                                    <button type="button" class="btn-secundario btn-sm"
+                                        onclick='editar(<?= json_encode($producto, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'>
+                                        Editar
                                     </button>
-                                </form>
+
+                                    <form method="POST" action="<?= BASE_URL ?>productos" class="inline">
+                                        <?= csrf_field() ?>
+                                        <input type="hidden" name="accion" value="estado">
+                                        <input type="hidden" name="id_producto" value="<?= (int) $producto['id_producto'] ?>">
+                                        <input type="hidden" name="estado" value="<?= (int) $producto['estado'] === 1 ? 0 : 1 ?>">
+                                        <button type="submit"
+                                            class="<?= (int) $producto['estado'] === 1 ? 'btn-peligro' : 'btn-exito' ?> btn-sm">
+                                            <?= (int) $producto['estado'] === 1 ? 'Desactivar' : 'Activar' ?>
+                                        </button>
+                                    </form>
+                                <?php endif; ?>
                             </td>
                         <?php endif; ?>
                     </tr>
