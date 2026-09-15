@@ -1,25 +1,25 @@
-<?php require_once __DIR__ . '/components/public/header.php'; ?>
-<?php require_once __DIR__ . '/components/public/navbar.php'; ?>
+<?php require_once __DIR__ . '/components/header.php'; ?>
+<?php require_once __DIR__ . '/components/navbar.php'; ?>
 
 <!-- Hero Section -->
 <section class="relative bg-marca-700 overflow-hidden">
     <!-- Imagen de fondo oscura -->
     <div class="absolute inset-0">
-        <img src="<?= BASE_URL ?>assets/img/login-hero.jpg" alt="Minimarket interior" class="w-full h-full object-cover opacity-20">
+        <img src="assets/img/login-hero.jpg" alt="Minimarket interior" class="w-full h-full object-cover opacity-20">
     </div>
     
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32 flex flex-col items-center text-center">
         <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tight mb-6">
-            Bienvenido a <span class="text-marca-200"><?= e($nombreComercial) ?></span>
+            Bienvenido a <span class="text-marca-200"><?= htmlspecialchars($nombreComercial) ?></span>
         </h1>
         <p class="text-xl md:text-2xl text-marca-100 max-w-3xl mb-10 leading-relaxed">
             Los mejores productos para tu hogar. Frescura, calidad y precios increíbles cerca de ti.
         </p>
         <div class="flex flex-col sm:flex-row gap-4">
-            <a href="<?= BASE_URL ?>tienda" class="px-8 py-3 bg-white text-marca-700 font-bold rounded-lg shadow-lg hover:bg-slate-50 transition-all text-lg">
+            <a href="productos.php" class="px-8 py-3 bg-white text-marca-700 font-bold rounded-lg shadow-lg hover:bg-slate-50 transition-all text-lg">
                 Ver Catálogo
             </a>
-            <a href="<?= BASE_URL ?>nosotros" class="px-8 py-3 bg-marca-600 border border-marca-400 text-white font-bold rounded-lg shadow-lg hover:bg-marca-500 transition-all text-lg">
+            <a href="nosotros.php" class="px-8 py-3 bg-marca-600 border border-marca-400 text-white font-bold rounded-lg shadow-lg hover:bg-marca-500 transition-all text-lg">
                 Conócenos
             </a>
         </div>
@@ -67,10 +67,10 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h2 class="text-3xl font-bold text-white mb-6">¿Deseas visitar nuestra tienda?</h2>
         <p class="text-marca-100 text-lg mb-8 max-w-2xl mx-auto">Te esperamos todos los días desde las 8:00 AM hasta las 10:00 PM. Encuentra todo lo que necesitas en un solo lugar.</p>
-        <a href="<?= BASE_URL ?>contacto" class="inline-block px-8 py-3 bg-white text-marca-700 font-bold rounded-lg shadow-lg hover:bg-slate-50 transition-all text-lg">
+        <a href="contacto.php" class="inline-block px-8 py-3 bg-white text-marca-700 font-bold rounded-lg shadow-lg hover:bg-slate-50 transition-all text-lg">
             Ver Ubicación
         </a>
     </div>
 </section>
 
-<?php require_once __DIR__ . '/components/public/footer.php'; ?>
+<?php require_once __DIR__ . '/components/footer.php'; ?>
