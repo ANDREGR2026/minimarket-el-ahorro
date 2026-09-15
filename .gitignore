@@ -1,5 +1,5 @@
 .env
-storage/comprobantes/*.pdf
+# storage/comprobantes/*.pdf
 assets/img/productos/*
 !assets/img/productos/.gitkeep
 storage/backups/*.sql
