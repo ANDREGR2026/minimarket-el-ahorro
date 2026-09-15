@@ -14,6 +14,12 @@ RewriteRule ^(database|models|controllers|middleware|components|lib|docs)/ - [F,
 # (que valida el rol); el acceso directo por URL queda bloqueado.
 RewriteRule ^storage/backups/.+\.sql$ - [F,L]
 
+# Paginas publicas
+RewriteRule ^nosotros/?$ pages/nosotros.php [QSA,L]
+RewriteRule ^tienda/?$ pages/tienda.php [QSA,L]
+RewriteRule ^galeria/?$ pages/galeria.php [QSA,L]
+RewriteRule ^contacto/?$ pages/contacto.php [QSA,L]
+
 # Autenticacion
 RewriteRule ^login/?$ pages/login.php [QSA,L]
 RewriteRule ^logout/?$ pages/logout.php [QSA,L]
