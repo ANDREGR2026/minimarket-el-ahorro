@@ -248,7 +248,7 @@ require __DIR__ . '/../components/layout_inicio.php';
                         <div class="mt-3 flex items-center justify-between text-sm">
                             <span class="text-slate-500">Cantidad</span>
                             <span class="font-semibold text-slate-800">
-                                <?= $movimiento['tipo'] === 'SALIDA' ? '−' : '+' ?><?= (int) $movimiento['cantidad'] ?>
+                                <?= (int) $movimiento['stock_nuevo'] < (int) $movimiento['stock_anterior'] ? '−' : '+' ?><?= (int) $movimiento['cantidad'] ?>
                             </span>
                         </div>
 
@@ -309,7 +309,7 @@ require __DIR__ . '/../components/layout_inicio.php';
                                     </span>
                                 </td>
                                 <td class="text-center font-semibold">
-                                    <?= $movimiento['tipo'] === 'SALIDA' ? '−' : '+' ?><?= (int) $movimiento['cantidad'] ?>
+                                    <?= (int) $movimiento['stock_nuevo'] < (int) $movimiento['stock_anterior'] ? '−' : '+' ?><?= (int) $movimiento['cantidad'] ?>
                                 </td>
                                 <td class="text-center text-xs text-slate-500">
                                     <?= (int) $movimiento['stock_anterior'] ?> &rarr;
