@@ -1,0 +1,56 @@
+flowchart LR
+    classDef actor fill:#1e468a,stroke:#172c54,color:#ffffff,stroke-width:2px
+    classDef caso fill:#eff8ff,stroke:#257aeb,color:#172c54,rx:20,ry:20
+    classDef sistema fill:#f8fafc,stroke:#94a3b8,color:#475569
+
+    ADMIN(["👤<br/>Administrador"]):::actor
+    CAJERO(["👤<br/>Cajero"]):::actor
+    ALMACENERO(["👤<br/>Almacenero"]):::actor
+
+    subgraph SISTEMA["Sistema Web para la Gestión de un Minimarket"]
+        direction TB
+
+        CU01("CU-01<br/>Iniciar sesión"):::caso
+        CU02("CU-02<br/>Registrar venta"):::caso
+        CU03("CU-03<br/>Emitir comprobante"):::caso
+        CU04("CU-04<br/>Consultar historial<br/>de ventas"):::caso
+        CU05("CU-05<br/>Anular venta"):::caso
+        CU06("CU-06<br/>Gestionar productos"):::caso
+        CU07("CU-07<br/>Gestionar categorías"):::caso
+        CU08("CU-08<br/>Registrar movimiento<br/>de inventario"):::caso
+        CU09("CU-09<br/>Consultar kardex"):::caso
+        CU10("CU-10<br/>Gestionar clientes"):::caso
+        CU11("CU-11<br/>Consultar dashboard"):::caso
+        CU12("CU-12<br/>Generar reportes"):::caso
+        CU13("CU-13<br/>Gestionar usuarios"):::caso
+        CU14("CU-14<br/>Consultar catálogo<br/>de productos"):::caso
+    end
+
+    class SISTEMA sistema
+
+    CAJERO --- CU01
+    CAJERO --- CU02
+    CAJERO --- CU04
+    CAJERO --- CU10
+    CAJERO --- CU14
+
+    ADMIN --- CU01
+    ADMIN --- CU02
+    ADMIN --- CU05
+    ADMIN --- CU06
+    ADMIN --- CU07
+    ADMIN --- CU08
+    ADMIN --- CU09
+    ADMIN --- CU10
+    ADMIN --- CU11
+    ADMIN --- CU12
+    ADMIN --- CU13
+
+    ALMACENERO --- CU01
+    ALMACENERO --- CU08
+    ALMACENERO --- CU09
+    ALMACENERO --- CU14
+
+    CU02 -.->|"&laquo;include&raquo;"| CU03
+    CU05 -.->|"&laquo;include&raquo;"| CU08
+    CU06 -.->|"&laquo;extend&raquo;"| CU09
