@@ -1,7 +1,7 @@
 .env
 # storage/comprobantes/*.pdf
-assets/img/productos/*
-!assets/img/productos/.gitkeep
+# assets/img/productos/*
+# !assets/img/productos/.gitkeep
 storage/backups/*.sql
 !storage/backups/.gitkeep
 node_modules/
@@ -13,6 +13,6 @@ desktop.ini
 ~$*.doc*
 ~$*.xls*
 ~$*.ppt*
-docs/
-figma/
-*.zip
+# docs/
+# figma/
+# *.zip
