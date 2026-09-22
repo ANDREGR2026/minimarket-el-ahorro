@@ -1,19 +1,12 @@
 <?php require_once __DIR__ . '/../components/public/header.php'; ?>
 <?php require_once __DIR__ . '/../components/public/navbar.php'; ?>
-
-<div class="bg-slate-50 py-16 min-h-[calc(100vh-200px)]">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-            <h1 class="text-3xl font-bold text-slate-900 mb-3">Galería</h1>
-            <p class="text-slate-600">Un vistazo a nuestras instalaciones y los productos que ofrecemos.</p>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <img src="<?= BASE_URL ?>assets/img/login-hero.jpg" class="rounded-xl shadow w-full h-64 object-cover" alt="Nuestra tienda 1">
-            <img src="<?= BASE_URL ?>assets/img/login-hero.jpg" class="rounded-xl shadow w-full h-64 object-cover opacity-90" alt="Nuestra tienda 2">
-            <img src="<?= BASE_URL ?>assets/img/login-hero.jpg" class="rounded-xl shadow w-full h-64 object-cover opacity-80" alt="Nuestra tienda 3">
-        </div>
-    </div>
-</div>
-
+<main class="bg-slate-50 py-16 sm:py-20"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-2xl"><span class="text-sm font-bold uppercase tracking-[0.18em] text-marca-600">Galería</span><h1 class="mt-3 text-4xl font-extrabold tracking-tight text-slate-900">Conoce nuestro espacio.</h1><p class="mt-4 text-lg text-slate-600">Un recorrido por las zonas que hacen más fácil tu compra diaria.</p></div>
+    <section class="mt-10 grid gap-5 md:grid-cols-3" aria-label="Recorrido visual por la tienda">
+        <figure class="overflow-hidden rounded-2xl bg-white shadow-sm"><img src="<?= BASE_URL ?>assets/img/galeria-minimarket.png" alt="Ingreso y zona de atención de la tienda" class="h-72 w-full object-cover" style="object-position: left center"><figcaption class="px-5 py-5"><p class="font-bold text-slate-800">Ingreso y atención</p><p class="mt-1 text-sm leading-relaxed text-slate-500">Una entrada clara para ubicarte y resolver tu compra sin demoras.</p></figcaption></figure>
+        <figure class="overflow-hidden rounded-2xl bg-white shadow-sm"><img src="<?= BASE_URL ?>assets/img/galeria-minimarket.png" alt="Pasillo central con productos de uso diario" class="h-72 w-full object-cover" style="object-position: center center"><figcaption class="px-5 py-5"><p class="font-bold text-slate-800">Productos del día</p><p class="mt-1 text-sm leading-relaxed text-slate-500">Abarrotes y esenciales organizados para encontrarlos con facilidad.</p></figcaption></figure>
+        <figure class="overflow-hidden rounded-2xl bg-white shadow-sm"><img src="<?= BASE_URL ?>assets/img/galeria-minimarket.png" alt="Zona de limpieza, bebidas y productos para el hogar" class="h-72 w-full object-cover" style="object-position: right center"><figcaption class="px-5 py-5"><p class="font-bold text-slate-800">Hogar y bebidas</p><p class="mt-1 text-sm leading-relaxed text-slate-500">Opciones para completar lo que necesitas llevar a casa.</p></figcaption></figure>
+    </section>
+    <section class="mt-12 grid gap-6 rounded-2xl bg-slate-900 p-7 text-white sm:p-9 lg:grid-cols-[1fr_auto] lg:items-center"><div><p class="text-xs font-bold uppercase tracking-[0.18em] text-marca-300">Visítanos</p><h2 class="mt-2 text-2xl font-bold">¿Quieres conocer la tienda?</h2><p class="mt-3 max-w-2xl text-slate-300">Estamos en <?= e($direccionComercial) ?>. Te esperamos todos los días de 8:00 a. m. a 10:00 p. m.</p></div><a href="<?= BASE_URL ?>contacto" class="inline-flex w-fit items-center justify-center rounded-lg bg-white px-5 py-3 text-sm font-bold text-slate-900 transition hover:bg-slate-100">Ver cómo llegar</a></section>
+</div></main>
 <?php require_once __DIR__ . '/../components/public/footer.php'; ?>

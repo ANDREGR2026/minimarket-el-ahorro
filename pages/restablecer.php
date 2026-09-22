@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="w-full max-w-sm">
 
             <div class="mb-8 flex items-center gap-3">
-                <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-marca-600 text-xl font-bold text-white">A</span>
+                <span class="flex h-11 w-11 items-center justify-center overflow-hidden rounded-xl" aria-hidden="true"><img src="<?= BASE_URL ?>assets/img/favicon.svg" alt="" class="h-full w-full"></span>
                 <span class="text-lg font-semibold text-slate-800"><?= e($nombreComercial) ?></span>
             </div>
 

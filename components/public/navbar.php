@@ -1,21 +1,22 @@
-<nav class="bg-marca-600 shadow-md sticky top-0 z-50">
+<?php $rutaPublica = trim(parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH), '/'); ?>
+<nav class="border-b border-marca-500/40 bg-marca-700/95 shadow-sm backdrop-blur sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
+        <div class="flex justify-between h-[4.5rem]">
             <div class="flex items-center">
                 <a href="<?= BASE_URL ?>" class="flex items-center gap-3">
-                    <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-white/20 text-xl font-bold text-white">A</span>
-                    <span class="text-xl font-bold text-white"><?= e($nombreComercial) ?></span>
+                    <span class="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-white/15 ring-1 ring-white/20" aria-hidden="true"><img src="<?= BASE_URL ?>assets/img/favicon.svg" alt="" class="h-full w-full"></span>
+                    <span><span class="block text-lg font-bold leading-tight text-white"><?= e($nombreComercial) ?></span><span class="block text-[10px] font-medium uppercase tracking-[0.16em] text-marca-200">Minimarket</span></span>
                 </a>
             </div>
-            <div class="hidden md:flex items-center space-x-8">
-                <a href="<?= BASE_URL ?>" class="text-white hover:text-marca-100 font-medium transition-colors">Inicio</a>
-                <a href="<?= BASE_URL ?>nosotros" class="text-marca-100 hover:text-white font-medium transition-colors">Nosotros</a>
-                <a href="<?= BASE_URL ?>tienda" class="text-marca-100 hover:text-white font-medium transition-colors">Productos</a>
-                <a href="<?= BASE_URL ?>galeria" class="text-marca-100 hover:text-white font-medium transition-colors">Galería</a>
-                <a href="<?= BASE_URL ?>contacto" class="text-marca-100 hover:text-white font-medium transition-colors">Contacto</a>
+            <div class="ml-auto hidden items-center space-x-1 md:flex">
+                <a href="<?= BASE_URL ?>" class="rounded-lg px-3 py-2 text-sm font-semibold <?= $rutaPublica === 'MINIMARKET' || $rutaPublica === '' ? 'bg-white/15 text-white' : 'text-marca-100 hover:bg-white/10 hover:text-white' ?> transition">Inicio</a>
+                <a href="<?= BASE_URL ?>nosotros" class="rounded-lg px-3 py-2 text-sm font-semibold <?= str_ends_with($rutaPublica, 'nosotros') ? 'bg-white/15 text-white' : 'text-marca-100 hover:bg-white/10 hover:text-white' ?> transition">Nosotros</a>
+                <a href="<?= BASE_URL ?>tienda" class="rounded-lg px-3 py-2 text-sm font-semibold <?= str_ends_with($rutaPublica, 'tienda') ? 'bg-white/15 text-white' : 'text-marca-100 hover:bg-white/10 hover:text-white' ?> transition">Productos</a>
+                <a href="<?= BASE_URL ?>galeria" class="rounded-lg px-3 py-2 text-sm font-semibold <?= str_ends_with($rutaPublica, 'galeria') ? 'bg-white/15 text-white' : 'text-marca-100 hover:bg-white/10 hover:text-white' ?> transition">Galería</a>
+                <a href="<?= BASE_URL ?>contacto" class="rounded-lg px-3 py-2 text-sm font-semibold <?= str_ends_with($rutaPublica, 'contacto') ? 'bg-white/15 text-white' : 'text-marca-100 hover:bg-white/10 hover:text-white' ?> transition">Contacto</a>
             </div>
-            <div class="hidden md:flex items-center">
-                <a href="<?= BASE_URL ?>login" class="bg-white text-marca-600 hover:bg-slate-50 px-5 py-2 rounded-lg font-bold shadow-sm transition-all">
+            <div class="ml-3 hidden items-center md:flex">
+                <a href="<?= BASE_URL ?>login" class="inline-flex items-center justify-center rounded-lg bg-white px-4 py-2 text-sm font-semibold text-marca-700 shadow-sm transition hover:bg-marca-50 focus:outline-none focus:ring-2 focus:ring-white/70">
                     Acceder al Sistema
                 </a>
             </div>
@@ -39,10 +40,11 @@
             <a href="<?= BASE_URL ?>tienda" class="text-marca-100 hover:text-white font-medium block py-2">Productos</a>
             <a href="<?= BASE_URL ?>galeria" class="text-marca-100 hover:text-white font-medium block py-2">Galería</a>
             <a href="<?= BASE_URL ?>contacto" class="text-marca-100 hover:text-white font-medium block py-2">Contacto</a>
-            <hr class="border-marca-500 my-2">
-            <a href="<?= BASE_URL ?>login" class="bg-white text-center text-marca-600 hover:bg-slate-50 px-5 py-2 rounded-lg font-bold block mt-2">
-                Acceder al Sistema
-            </a>
+            <div class="mt-1 flex w-full justify-center border-t border-marca-500 pt-4">
+                <a href="<?= BASE_URL ?>login" class="inline-flex items-center justify-center font-semibold text-marca-100 transition hover:text-white">
+                    Acceder al sistema
+                </a>
+            </div>
         </div>
     </div>
 </nav>

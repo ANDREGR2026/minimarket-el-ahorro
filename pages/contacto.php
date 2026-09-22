@@ -1,39 +1,14 @@
 <?php require_once __DIR__ . '/../components/public/header.php'; ?>
 <?php require_once __DIR__ . '/../components/public/navbar.php'; ?>
-
-<div class="bg-slate-50 py-16 min-h-[calc(100vh-200px)]">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="max-w-3xl mx-auto">
-            <div class="text-center mb-12">
-                <h1 class="text-3xl font-bold text-slate-900 mb-3">Contacto</h1>
-                <p class="text-slate-600">¿Tienes dudas o comentarios? Escríbenos y te responderemos lo más pronto posible.</p>
-            </div>
-            
-            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8">
-                <form action="#" method="POST" class="space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Nombre</label>
-                            <input type="text" class="w-full rounded-lg border-slate-300 ring-1 ring-slate-300 px-3 py-2 focus:ring-2 focus:ring-marca-500 focus:outline-none" placeholder="Tu nombre">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 mb-1">Correo Electrónico</label>
-                            <input type="email" class="w-full rounded-lg border-slate-300 ring-1 ring-slate-300 px-3 py-2 focus:ring-2 focus:ring-marca-500 focus:outline-none" placeholder="tu@correo.com">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 mb-1">Mensaje</label>
-                        <textarea rows="4" class="w-full rounded-lg border-slate-300 ring-1 ring-slate-300 px-3 py-2 focus:ring-2 focus:ring-marca-500 focus:outline-none" placeholder="¿En qué te podemos ayudar?"></textarea>
-                    </div>
-                    <div>
-                        <button type="button" class="w-full md:w-auto px-8 py-3 bg-marca-600 text-white font-bold rounded-lg shadow hover:bg-marca-700 transition-colors">
-                            Enviar Mensaje
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
+<main class="min-h-screen bg-slate-50 py-16 sm:py-20"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-2xl"><span class="text-sm font-bold uppercase tracking-[0.18em] text-marca-600">Contacto</span><h1 class="mt-3 text-4xl font-extrabold tracking-tight text-slate-900">Estamos para ayudarte.</h1><p class="mt-4 text-lg text-slate-600">Visítanos o comunícate con nosotros. Será un gusto atenderte.</p></div>
+    <div class="mt-10 grid gap-6 lg:grid-cols-5">
+        <section class="space-y-4 lg:col-span-2">
+            <a href="tel:<?= e(preg_replace('/[^0-9+]/', '', $telefonoComercial)) ?>" class="tarjeta flex items-start gap-4 p-5 transition hover:border-marca-200 hover:shadow-md"><span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-marca-100 text-marca-700"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg></span><span><span class="block text-sm font-semibold text-slate-400">Teléfono</span><span class="mt-1 block font-bold text-slate-800"><?= e($telefonoComercial) ?></span></span></a>
+            <div class="tarjeta flex items-start gap-4 p-5"><span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg></span><span><span class="block text-sm font-semibold text-slate-400">Dirección</span><span class="mt-1 block font-bold text-slate-800"><?= e($direccionComercial) ?></span></span></div>
+            <div class="rounded-2xl bg-marca-700 p-6 text-white"><p class="font-bold">Horario de atención</p><p class="mt-2 text-marca-100">Todos los días, de 8:00 a. m. a 10:00 p. m.</p></div>
+        </section>
+        <section class="tarjeta p-6 sm:p-8 lg:col-span-3"><h2 class="text-xl font-bold text-slate-900">Información de atención</h2><p class="mt-2 leading-relaxed text-slate-600">Para consultas sobre productos, precios o disponibilidad, comunícate directamente con nuestra tienda.</p><div class="mt-7 divide-y divide-slate-100 rounded-xl border border-slate-200"><div class="flex items-center justify-between gap-4 p-5"><div><p class="text-sm font-semibold text-slate-400">Llámanos</p><p class="mt-1 font-bold text-slate-800"><?= e($telefonoComercial) ?></p></div><a href="tel:<?= e(preg_replace('/[^0-9+]/', '', $telefonoComercial)) ?>" class="btn-primario">Llamar</a></div><div class="p-5"><p class="text-sm font-semibold text-slate-400">Visítanos</p><p class="mt-1 font-bold text-slate-800"><?= e($direccionComercial) ?></p><p class="mt-2 text-sm text-slate-500">Todos los días · 8:00 a. m. a 10:00 p. m.</p></div></div><p class="mt-6 text-sm text-slate-500">Estamos encantados de atenderte personalmente.</p></section>
     </div>
-</div>
-
+</div></main>
 <?php require_once __DIR__ . '/../components/public/footer.php'; ?>

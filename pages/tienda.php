@@ -1,43 +1,18 @@
-<?php 
-require_once __DIR__ . '/../components/public/header.php'; 
-require_once __DIR__ . '/../components/public/navbar.php'; 
+<?php
+require_once __DIR__ . '/../components/public/header.php';
+require_once __DIR__ . '/../components/public/navbar.php';
 require_once __DIR__ . '/../models/Producto.php';
+require_once __DIR__ . '/../models/Categoria.php';
 
+$busqueda = trim($_GET['q'] ?? '');
+$categoriaSeleccionada = (int) ($_GET['categoria'] ?? 0);
 $productoModel = new Producto();
-$productos = $productoModel->listar(['estado' => 'ACTIVO']);
+$productos = $productoModel->listar(['solo_activos' => true, 'busqueda' => $busqueda, 'id_categoria' => $categoriaSeleccionada]);
+$categorias = array_filter((new Categoria())->listar('', true), static fn($categoria) => (int) $categoria['total_productos'] > 0);
 ?>
-
-<div class="bg-slate-50 py-12 min-h-screen">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="mb-10 text-center">
-            <h1 class="text-3xl font-bold text-slate-900 mb-3">Nuestro Catálogo</h1>
-            <p class="text-slate-600">Explora todos nuestros productos disponibles al mejor precio.</p>
-        </div>
-
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <?php foreach ($productos as $p): ?>
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition-shadow flex flex-col">
-                    <div class="p-4 bg-slate-100 flex justify-center items-center h-40">
-                        <svg class="h-16 w-16 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                        </svg>
-                    </div>
-                    <div class="p-5 flex flex-col flex-1">
-                        <span class="text-xs font-semibold text-marca-600 uppercase tracking-wider mb-1"><?= e($p['categoria']) ?></span>
-                        <h3 class="text-sm font-bold text-slate-800 line-clamp-2 mb-2 flex-1" title="<?= e($p['nombre']) ?>"><?= e($p['nombre']) ?></h3>
-                        <div class="mt-auto flex items-center justify-between">
-                            <span class="text-lg font-extrabold text-slate-900">S/ <?= number_format($p['precio_venta'], 2) ?></span>
-                        </div>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-            <?php if (empty($productos)): ?>
-                <div class="col-span-full py-12 text-center text-slate-500">
-                    No hay productos disponibles en este momento.
-                </div>
-            <?php endif; ?>
-        </div>
-    </div>
-</div>
-
+<main class="min-h-screen bg-white"><section class="border-b border-slate-200 bg-slate-50 py-12 sm:py-16"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><p class="text-xs font-bold uppercase tracking-[0.18em] text-marca-600">Catálogo</p><div class="mt-3 flex flex-wrap items-end justify-between gap-4"><div><h1 class="text-4xl font-extrabold tracking-tight text-slate-900">Encuentra lo que buscas.</h1><p class="mt-3 text-slate-600">Consulta precios y productos disponibles en tienda.</p></div><p class="text-sm text-slate-500"><strong class="text-slate-900"><?= count($productos) ?></strong> producto(s) encontrado(s)</p></div>
+    <form method="get" class="mt-8 grid gap-3 md:grid-cols-[1fr_220px_auto]"><label class="sr-only" for="q">Buscar productos</label><input id="q" name="q" type="search" value="<?= e($busqueda) ?>" class="campo bg-white py-3" placeholder="Buscar por nombre o código"><select id="categoria" name="categoria" class="campo py-3"><option value="">Todas las categorías</option><?php foreach ($categorias as $categoria): ?><option value="<?= (int) $categoria['id_categoria'] ?>" <?= $categoriaSeleccionada === (int) $categoria['id_categoria'] ? 'selected' : '' ?>><?= e($categoria['nombre']) ?></option><?php endforeach; ?></select><button class="btn-primario px-6 py-3">Buscar</button></form>
+    <?php if ($busqueda !== '' || $categoriaSeleccionada > 0): ?><a href="<?= BASE_URL ?>tienda" class="mt-4 inline-block text-sm font-semibold text-marca-700 hover:text-marca-900">Limpiar filtros</a><?php endif; ?></div></section>
+    <section class="py-10 sm:py-14"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><?php if (!empty($productos)): ?><div class="grid gap-4 border-t border-slate-200 pt-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"><?php foreach ($productos as $p): ?><article class="group flex min-h-40 flex-col rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-marca-300 hover:shadow-md"><div class="flex items-start justify-between gap-3"><span class="rounded-md bg-slate-100 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wide text-slate-600"><?= e($p['categoria']) ?></span><span class="text-xs font-semibold text-slate-400"><?= e($p['unidad_medida']) ?></span></div><h2 class="mt-5 text-base font-bold leading-snug text-slate-800" title="<?= e($p['nombre']) ?>"><?= e($p['nombre']) ?></h2><div class="mt-auto flex items-end justify-between gap-3 border-t border-slate-100 pt-4"><p class="text-xl font-extrabold text-slate-900"><?= e($monedaComercial) ?> <?= number_format($p['precio_venta'], 2) ?></p><p class="text-xs text-slate-500">Por <?= strtolower(e($p['unidad_medida'])) ?></p></div></article><?php endforeach; ?></div><?php else: ?><div class="border-y border-slate-200 py-16 text-center"><h2 class="font-bold text-slate-800">No encontramos productos con esos filtros.</h2><p class="mt-2 text-slate-500">Prueba con otro nombre o revisa todas las categorías.</p><a href="<?= BASE_URL ?>tienda" class="btn-secundario mt-6">Ver todo el catálogo</a></div><?php endif; ?></div></section>
+</main>
 <?php require_once __DIR__ . '/../components/public/footer.php'; ?>

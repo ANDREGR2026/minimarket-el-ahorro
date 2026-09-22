@@ -1,149 +1,56 @@
 classDiagram
-    direction TB
-
-    class Auth {
-        <<middleware>>
-        +check()
-        +checkRole(roles) void
-        +rol() string
-        +esAdministrador() bool
-        +logout() void
-    }
-
-    class Conexion {
-        -PDO instancia$
-        +conectar() PDO$
-    }
-
-    class Usuario {
-        -int id_usuario
-        -string nombre
-        -string usuario
-        -string password
-        -string rol
-        -bool estado
-        +obtenerPorUsuario(usuario)
-        +listar(busqueda, rol)
-        +crear(nombre, usuario, password, rol)
-        +actualizar(id, ...)
-        +contarAdministradoresActivos(id)
-    }
-
-    class Categoria {
-        -int id_categoria
-        -string nombre
-        -string descripcion
-        -bool estado
-        +listar(busqueda, soloActivas)
-        +crear(nombre, descripcion)
-        +actualizar(id, ...)
-        +contarProductos(id) int
-    }
-
-    class Producto {
-        -int id_producto
-        -string codigo_barras
-        -string nombre
-        -decimal precio_compra
-        -decimal precio_venta
-        -int stock
-        -int stock_minimo
-        +listar(filtros)
-        +obtenerPorCodigo(codigo)
-        +buscar(termino)
-        +crear(datos)
-        +stockBajo(limite)
-        +resumen()
-    }
-
-    class Cliente {
-        -int id_cliente
-        -string tipo_documento
-        -string numero_documento
-        -string nombres
-        -string razon_social
-        +listar(filtros)
-        +obtenerPorDocumento(doc)
-        +buscar(termino)
-        +crear(datos)
-        +historialCompras(id)
-    }
-
-    class Venta {
-        -int id_venta
-        -string tipo_comprobante
-        -string serie
-        -int correlativo
-        -datetime fecha
-        -decimal subtotal
-        -decimal igv
-        -decimal total
-        -string estado
-        +registrar(items, datos)
-        +anular(id, motivo, usuario)
-        +listar(filtros)
-        +detalle(id)
-        -siguienteCorrelativo(tipo)
-        -validarClienteFactura(id)
-    }
-
-    class DetalleVenta {
-        -int id_detalle
-        -int cantidad
-        -decimal precio_unitario
-        -decimal subtotal
-    }
-
-    class Inventario {
-        -int id_movimiento
-        -string tipo
-        -int cantidad
-        -int stock_anterior
-        -int stock_nuevo
-        +registrarEntrada(...)
-        +registrarSalida(...)
-        +registrarAjuste(...)
-        +insertarMovimiento(...)
-        +kardex(idProducto)
-    }
-
-    class Configuracion {
-        -string clave
-        -string valor
-        +todos()
-        +igv() float
-        +factorIgv() float
-    }
-
-    class Reporte {
-        +indicadores()
-        +ventasPorDia(dias)
-        +productosMasVendidos(...)
-        +ventasPorCategoria(...)
-        +resumenRango(desde, hasta)
-    }
-
-    class VentaController {
-        +registrar(carrito, datos, usuario)
-        +anular(id, motivo, usuario)
-        +buscarProductos(termino)
-    }
-
-    class ComprobanteController {
-        +generar(idVenta, destino)
-        +numeroALetras(monto) string
-    }
-
-    Usuario "1" --> "0..*" Venta : registra
-    Cliente "0..1" --> "0..*" Venta : recibe
-    Venta "1" *-- "1..*" DetalleVenta : contiene
-    Producto "1" --> "0..*" DetalleVenta : se vende en
-    Producto "1" --> "0..*" Inventario : registra movimientos
-    Categoria "1" --> "0..*" Producto : agrupa
-    Venta ..> Inventario : actualiza stock
-    Venta ..> Configuracion : consulta IGV
-    VentaController ..> Venta : usa
-    ComprobanteController ..> Venta : usa
-    Venta ..> Conexion : usa
-    Producto ..> Conexion : usa
-    Reporte ..> Conexion : usa
+  direction LR
+  class Auth {
+    <<middleware>>
+    +checkRole(roles)
+    +usuario()
+    +rol()
+    +esAdministrador()
+    +esSuperAdministrador()
+  }
+  class Usuario {
+    +listar()
+    +crear()
+    +actualizar()
+    +guardarTokenReset()
+    +actualizarPassword()
+  }
+  class Producto {
+    +listar()
+    +buscar()
+    +obtenerPorCodigo()
+    +stockBajo()
+  }
+  class Venta {
+    +registrar(items datos)
+    +anular(id motivo usuario)
+    +detalle(id)
+  }
+  class Inventario {
+    +registrarEntrada()
+    +registrarSalida()
+    +registrarAjuste()
+    +kardex()
+  }
+  class Reporte {
+    +indicadores()
+    +ventasPorDia()
+    +resumenRango()
+  }
+  class Backup {
+    +generar()
+    +listar()
+    +aplicarRetencion()
+  }
+  class Conexion {
+    +conectar() PDO
+  }
+  Auth ..> Usuario : sesión y roles
+  Venta --> Producto : valida precio y stock
+  Venta ..> Inventario : crea salida
+  Reporte ..> Venta : consolida ventas
+  Backup ..> Conexion : exporta datos
+  Usuario ..> Conexion
+  Producto ..> Conexion
+  Venta ..> Conexion
+  Inventario ..> Conexion

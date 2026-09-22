@@ -97,6 +97,9 @@ require __DIR__ . '/../components/layout_inicio.php';
                 'Almacenero'          => 'badge-ambar',
                 default               => 'badge-gris',
             };
+            $etiquetaRol = $usuario['rol'] === 'SuperAdministrador'
+                ? 'Super Administrador'
+                : $usuario['rol'];
             ?>
             <div class="p-4">
                 <div class="flex items-start justify-between gap-3">
@@ -117,7 +120,7 @@ require __DIR__ . '/../components/layout_inicio.php';
                 </div>
 
                 <div class="mt-2 flex items-center justify-between text-sm">
-                    <span class="<?= $claseRol ?>"><?= e($usuario['rol']) ?></span>
+                    <span class="<?= $claseRol ?>"><?= e($etiquetaRol) ?></span>
                     <span class="text-xs text-slate-500">Desde <?= fecha_corta($usuario['created_at']) ?></span>
                 </div>
 
@@ -183,9 +186,12 @@ require __DIR__ . '/../components/layout_inicio.php';
                                 'Almacenero'          => 'badge-ambar',
                                 default               => 'badge-gris',
                             };
+                            $etiquetaRol = $usuario['rol'] === 'SuperAdministrador'
+                                ? 'Super Administrador'
+                                : $usuario['rol'];
                             ?>
                             <span class="<?= $claseRol ?>">
-                                <?= e($usuario['rol']) ?>
+                                <?= e($etiquetaRol) ?>
                             </span>
                         </td>
                         <td class="text-xs text-slate-500"><?= fecha_corta($usuario['created_at']) ?></td>

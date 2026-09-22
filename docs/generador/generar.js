@@ -401,25 +401,23 @@ function documentoDiagramas() {
             { primeraColumnaNegrita: true }
         ),
 
-        C.saltoPagina(),
-        C.titulo1('2. Diagrama de casos de uso'),
-        C.texto(
-            'Muestra los trece casos de uso del sistema agrupados dentro de su frontera y ' +
-            'los dos actores que interactúan con ellos. El cajero concentra su trabajo en el ' +
-            'punto de venta y en la consulta del catálogo; el administrador conserva además ' +
-            'el control del inventario, los reportes y las cuentas de acceso.'),
-        C.texto(
-            'La relación «include» entre CU-02 y CU-03 indica que registrar una venta ' +
-            'siempre emite un comprobante. La relación «extend» entre CU-06 y CU-09 indica ' +
-            'que desde la gestión de productos se puede consultar el kardex, pero no es ' +
-            'obligatorio hacerlo.'),
-        ...C.imagen('diagramas/01_casos_de_uso.png', 430,
-            'Figura 1. Diagrama de casos de uso'),
-
     ];
 
     // Los dos diagramas más anchos van en páginas horizontales para que se lean bien
     const hijosApaisados = [
+        C.titulo1('2. Diagrama de casos de uso'),
+        C.texto(
+            'Muestra los casos de uso implementados y los actores que interactúan con el sistema. ' +
+            'El visitante consulta el catálogo público; el cajero opera ventas y clientes; el almacenero ' +
+            'gestiona inventario y kardex; el administrador gestiona la operación; y el superadministrador ' +
+            'controla las cuentas de mayor privilegio.'),
+        C.texto(
+            'Registrar una venta incluye la emisión de su comprobante. El sistema aplica ' +
+            'permisos por rol antes de cada módulo y conserva los movimientos de stock en el kardex.'),
+        ...C.imagen('diagramas/01_casos_de_uso.png', 900,
+            'Figura 1. Diagrama de casos de uso'),
+
+        C.saltoPagina(),
         C.titulo1('3. Diagrama de clases'),
         C.texto(
             'Representa las clases del sistema, sus atributos, sus métodos principales y las ' +
@@ -479,7 +477,7 @@ function documentoDiagramas() {
             'comunican. El equipo de caja solo necesita un navegador; toda la lógica y los ' +
             'datos residen en el servidor Laragon, que puede ser el mismo equipo o cualquier ' +
             'otro dentro de la red local del minimarket.'),
-        ...C.imagen('diagramas/06_despliegue.png', 520,
+        ...C.imagen('diagramas/06b_despliegue_nuevo.png', 520,
             'Figura 6. Diagrama de despliegue del sistema'),
 
         C.saltoPagina(),
@@ -1072,12 +1070,16 @@ function documentoManual() {
 (async () => {
     console.log('Generando los documentos Word...');
 
-    await C.guardar(documentoRequerimientos(), '01_Documento_de_Requerimientos.docx');
-    await C.guardar(documentoHistorias(), '02_Historias_de_Usuario.docx');
-    await C.guardar(documentoCasosDeUso(), '03_Casos_de_Uso.docx');
-    await C.guardar(documentoDiagramas(), '04_Diagramas_UML.docx');
-    await C.guardar(documentoDiccionario(), '05_Diccionario_de_Datos.docx');
-    await C.guardar(documentoManual(), '06_Manual_de_Usuario.docx');
+    if (!process.env.SOLO_DIAGRAMAS) {
+        await C.guardar(documentoRequerimientos(), '01_Documento_de_Requerimientos.docx');
+        await C.guardar(documentoHistorias(), '02_Historias_de_Usuario.docx');
+        await C.guardar(documentoCasosDeUso(), '03_Casos_de_Uso.docx');
+    }
+    await C.guardar(documentoDiagramas(), process.env.ARCHIVO_DIAGRAMAS || '04_Diagramas_UML.docx');
+    if (!process.env.SOLO_DIAGRAMAS) {
+        await C.guardar(documentoDiccionario(), '05_Diccionario_de_Datos.docx');
+        await C.guardar(documentoManual(), '06_Manual_de_Usuario.docx');
+    }
 
     console.log('Listo.');
 })().catch(e => {

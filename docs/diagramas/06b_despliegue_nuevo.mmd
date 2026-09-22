@@ -1,0 +1,18 @@
+flowchart TB
+  classDef node fill:#FFFFFF,stroke:#334155,color:#111827,stroke-width:1.5px
+  classDef database fill:#F8FAFC,stroke:#334155,color:#111827,stroke-width:1.5px
+  classDef boundary fill:#FFFFFF,stroke:#64748B,color:#111827,stroke-width:1px
+
+  USR["Usuario\nNavegador web"]:::node
+  DEV["Lector de códigos\nImpresora térmica"]:::node
+  subgraph LOCAL["Servidor local Laragon"]
+    WEB["Apache y PHP 8.3\nPáginas web y API JSON"]:::node
+    MVC["Aplicación MVC\nAuth, controladores y modelos"]:::node
+    DB[("MySQL 8.4\nBase de datos minimarket")]:::database
+    FS["Sistema de archivos\nPDF, respaldos e imágenes"]:::node
+  end
+  DEV -. interacción de caja .-> USR
+  USR -->|HTTP| WEB
+  WEB --> MVC
+  MVC -->|PDO| DB
+  MVC --> FS

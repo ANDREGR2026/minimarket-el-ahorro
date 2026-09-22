@@ -111,7 +111,9 @@ require __DIR__ . '/../components/layout_inicio.php';
             <div class="flex items-center gap-2">
                 <h2 class="font-semibold text-slate-800">Productos por reponer</h2>
                 <?php if (!empty($datos['stockBajo'])): ?>
-                    <span class="badge-rojo"><?= count($datos['stockBajo']) ?></span>
+                    <span class="badge-rojo">
+                        <?= count($datos['stockBajo']) ?> de <?= (int) $catalogo['bajo_minimo'] ?>
+                    </span>
                 <?php endif; ?>
             </div>
             <a href="<?= BASE_URL ?>productos?stock_bajo=1"

@@ -272,6 +272,14 @@ input[type="number"] {
   -moz-appearance: textfield;
 }
 
+/* Navegación horizontal de categorías en las páginas públicas. */
+.public-categories {
+  scrollbar-width: none;
+}
+.public-categories::-webkit-scrollbar {
+  display: none;
+}
+
 /* Estilos aplicados solo al imprimir comprobantes y reportes */
 @media print {
   .no-imprimir { display: none !important; }
