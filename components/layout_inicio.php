@@ -33,6 +33,7 @@ if (Auth::esAdministrador()) {
     <title><?= e($titulo) ?> · <?= e($__nombreComercial) ?></title>
     <link rel="icon" href="<?= BASE_URL ?>assets/img/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="<?= asset_url('assets/css/tailwind.css') ?>">
+<?php require __DIR__ . '/identidad.php'; ?>
 </head>
 
 <body class="min-h-screen bg-slate-100 font-sans text-slate-800">
@@ -44,7 +45,8 @@ if (Auth::esAdministrador()) {
             class="fixed inset-y-0 left-0 z-40 flex w-64 -translate-x-full flex-col bg-slate-900 transition-transform lg:translate-x-0 no-imprimir">
 
             <div class="flex h-16 items-center gap-2.5 border-b border-slate-700/60 px-5">
-                <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-marca-600 text-lg font-bold text-white">A</span>
+                <img src="<?= e(asset_url(Identidad::logo())) ?>" alt="<?= e($__nombreComercial) ?>"
+                     class="h-9 w-9 shrink-0 rounded-lg object-contain">
                 <div class="leading-tight">
                     <p class="text-sm font-semibold text-white"><?= e($__nombreComercial) ?></p>
                     <p class="text-[11px] text-slate-400">Sistema de gestión</p>
