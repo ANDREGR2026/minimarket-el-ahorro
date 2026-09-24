@@ -12,6 +12,7 @@ $esAdmin     = Auth::esAdministrador();
 $verKardex   = $esAdmin || Auth::esAlmacenero();
 $controlador = new ProductoController();
 $categorias  = (new CategoriaController())->activas();
+$stockMinDef = (int) (new Configuracion())->obtener('stock_minimo_def', 5);
 
 // ---------------------------------------------------------------- acciones
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -62,10 +63,10 @@ require __DIR__ . '/../components/layout_inicio.php';
 
 <div class="mb-5 flex flex-wrap items-end justify-between gap-3">
     <form method="GET" action="<?= BASE_URL ?>productos" class="flex flex-wrap items-end gap-2">
-        <div>
+        <div class="filtro-busqueda">
             <label for="q" class="etiqueta">Buscar</label>
             <input type="search" id="q" name="q" value="<?= e($filtros['busqueda']) ?>"
-                class="campo w-56" placeholder="Nombre o código de barras">
+                class="campo" placeholder="Nombre o código de barras">
         </div>
 
         <div>
@@ -88,8 +89,8 @@ require __DIR__ . '/../components/layout_inicio.php';
             Solo stock bajo
         </label>
 
-        <button type="submit" class="btn-secundario">Filtrar</button>
-        <a href="<?= BASE_URL ?>productos" class="btn-secundario">Limpiar</a>
+        <button type="submit" class="btn-secundario"><svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16l-6 7v6l-4 2v-8Z"/></svg><span>Filtrar</span></button>
+        <a href="<?= BASE_URL ?>productos" class="btn-secundario"><svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11a9 9 0 1 1 3 8M3 4v7h7"/></svg><span>Limpiar</span></a>
     </form>
 
     <?php if ($esAdmin): ?>
@@ -159,13 +160,11 @@ require __DIR__ . '/../components/layout_inicio.php';
                 <?php if ($verKardex): ?>
                     <div class="mt-3 flex flex-wrap gap-2">
                         <a href="<?= BASE_URL ?>inventario?id_producto=<?= (int) $producto['id_producto'] ?>"
-                            class="btn-secundario btn-sm">Kardex</a>
+                            class="btn-secundario btn-sm"><svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H5v18h14V8ZM14 3v5h5M8 12h8M8 16h6"/></svg><span>Kardex</span></a>
 
                         <?php if ($esAdmin): ?>
                             <button type="button" class="btn-secundario btn-sm"
-                                onclick='editar(<?= json_encode($producto, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'>
-                                Editar
-                            </button>
+                                onclick='editar(<?= json_encode($producto, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'><svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 16 12-12 4 4L8 20H4ZM14 6l4 4"/></svg><span>Editar</span></button>
 
                             <form method="POST" action="<?= BASE_URL ?>productos" class="inline">
                                 <?= csrf_field() ?>
@@ -247,13 +246,11 @@ require __DIR__ . '/../components/layout_inicio.php';
                         <?php if ($verKardex): ?>
                             <td class="text-right whitespace-nowrap">
                                 <a href="<?= BASE_URL ?>inventario?id_producto=<?= (int) $producto['id_producto'] ?>"
-                                    class="btn-secundario btn-sm">Kardex</a>
+                                    class="btn-secundario btn-sm"><svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H5v18h14V8ZM14 3v5h5M8 12h8M8 16h6"/></svg><span>Kardex</span></a>
 
                                 <?php if ($esAdmin): ?>
                                     <button type="button" class="btn-secundario btn-sm"
-                                        onclick='editar(<?= json_encode($producto, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'>
-                                        Editar
-                                    </button>
+                                        onclick='editar(<?= json_encode($producto, JSON_HEX_APOS | JSON_HEX_QUOT) ?>)'><svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 16 12-12 4 4L8 20H4ZM14 6l4 4"/></svg><span>Editar</span></button>
 
                                     <form method="POST" action="<?= BASE_URL ?>productos" class="inline">
                                         <?= csrf_field() ?>
@@ -349,12 +346,13 @@ require __DIR__ . '/../components/layout_inicio.php';
                     </div>
 
                     <div>
-                        <label for="unidad_medida" class="etiqueta">Unidad de medida</label>
-                        <select id="unidad_medida" name="unidad_medida" class="campo">
+                        <label for="unidad_medida" class="etiqueta">Unidad de venta</label>
+                        <select id="unidad_medida" name="unidad_medida" class="campo" aria-describedby="ayuda-unidad-venta">
                             <?php foreach (['UNIDAD', 'BOLSA', 'BOTELLA', 'LATA', 'CAJA', 'PAQUETE', 'KILO', 'LITRO'] as $unidad): ?>
                                 <option value="<?= $unidad ?>"><?= $unidad ?></option>
                             <?php endforeach; ?>
                         </select>
+                        <p id="ayuda-unidad-venta" class="mt-2 text-xs text-slate-500">Indica cómo se cuenta el stock y se cobra el precio: botella, bolsa, lata, paquete o unidad. Escribe el contenido en el nombre (por ejemplo, aceite 1 L o arroz 5 kg). Kilo y litro solo corresponden a venta a granel.</p>
                     </div>
 
                     <div>
@@ -373,8 +371,8 @@ require __DIR__ . '/../components/layout_inicio.php';
                 </div>
 
                 <div class="flex justify-end gap-2 border-t border-slate-200 px-6 py-4">
-                    <button type="button" class="btn-secundario" onclick="cerrarModal()">Cancelar</button>
-                    <button type="submit" class="btn-primario">Guardar</button>
+                    <button type="button" class="btn-secundario" onclick="cerrarModal()"><svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M6 18 18 6"/></svg><span>Cancelar</span></button>
+                    <button type="submit" class="btn-primario"><svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 3h13l3 3v15H4ZM8 3v6h8V3M8 21v-8h8v8"/></svg><span>Guardar</span></button>
                 </div>
             </form>
         </div>
@@ -394,7 +392,7 @@ require __DIR__ . '/../components/layout_inicio.php';
             document.getElementById('precio_venta').value = '0.00';
             document.getElementById('stock').value = '0';
             document.getElementById('stock').readOnly = false;
-            document.getElementById('stock_minimo').value = '5';
+            document.getElementById('stock_minimo').value = '<?= $stockMinDef ?>';
             document.getElementById('unidad_medida').value = 'UNIDAD';
             document.getElementById('imagen').value = '';
             document.getElementById('bloque-estado').classList.add('hidden');

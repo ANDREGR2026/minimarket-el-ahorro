@@ -75,12 +75,27 @@ class VentaController
             return ['ok' => false, 'mensaje' => 'Indique el motivo de la anulación (mínimo 5 caracteres).'];
         }
 
+        // Verificar límite de días configurado
+        $dias = (int) $this->config->obtener('dias_anulacion', 0);
+        if ($dias > 0) {
+            $venta = $this->modelo->obtenerPorId((int) $idVenta);
+            if ($venta) {
+                $fechaVenta = new \DateTime($venta['fecha']);
+                $hoy        = new \DateTime();
+                $diferencia = $hoy->diff($fechaVenta)->days;
+                if ($diferencia > $dias) {
+                    return ['ok' => false, 'mensaje' => "No se puede anular: han pasado más de $dias día(s) desde la emisión del comprobante."];
+                }
+            }
+        }
+
         return $this->modelo->anular((int) $idVenta, $motivo, $idUsuario);
     }
 
     public function listar($filtros = [])
     {
-        return $this->modelo->listar($filtros);
+        $limite = max(50, (int) $this->config->obtener('ventas_limite', 200));
+        return $this->modelo->listar($filtros, $limite);
     }
 
     public function obtener($idVenta)
