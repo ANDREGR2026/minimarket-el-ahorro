@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../middleware/Auth.php';
+require_once __DIR__ . '/../models/Configuracion.php';
 require_once __DIR__ . '/../controllers/ProductoController.php';
 require_once __DIR__ . '/../controllers/CategoriaController.php';
 
