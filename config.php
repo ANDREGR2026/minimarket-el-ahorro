@@ -81,11 +81,21 @@ function asset_url($rutaRelativa)
 }
 
 /**
- * Formatea un monto como moneda peruana.
+ * Formatea un monto con el símbolo de moneda configurado en la BD.
+ * Lee la tabla configuracion una sola vez por petición (caché estático).
  */
 function money($monto)
 {
-    return 'S/ ' . number_format((float) $monto, 2, '.', ',');
+    static $simbolo = null;
+    if ($simbolo === null) {
+        try {
+            require_once ROOT_PATH . '/models/Configuracion.php';
+            $simbolo = (new Configuracion())->obtener('moneda', 'S/');
+        } catch (\Throwable $e) {
+            $simbolo = 'S/';
+        }
+    }
+    return $simbolo . ' ' . number_format((float) $monto, 2, '.', ',');
 }
 
 /**

@@ -190,8 +190,9 @@ class ComprobanteController
 
     private function total($pdf, $ancho, $etiqueta, $monto)
     {
+        $simbolo = $this->config->obtener('moneda', 'S/');
         $pdf->Cell($ancho - 22, 4.5, $this->texto($etiqueta), 0, 0, 'R');
-        $pdf->Cell(22, 4.5, 'S/ ' . number_format($monto, 2), 0, 1, 'R');
+        $pdf->Cell(22, 4.5, $simbolo . ' ' . number_format($monto, 2), 0, 1, 'R');
     }
 
     /**

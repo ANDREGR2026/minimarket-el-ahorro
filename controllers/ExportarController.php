@@ -81,6 +81,7 @@ class ExportarController
         $ventas  = $this->reportes->detalleVentas($desde, $hasta);
         $config  = $this->config->todos();
         $resumen = $datos['resumen'];
+        $sim     = ($config['moneda'] ?? 'S/') . ' ';
 
         $pdf = new FPDF('P', 'mm', 'A4');
         $pdf->SetMargins(12, 12, 12);
@@ -113,10 +114,10 @@ class ExportarController
         $this->filaResumen($pdf, 'Comprobantes emitidos', (int) $resumen['tickets']);
         $this->filaResumen($pdf, 'Boletas / Facturas',
             (int) $resumen['boletas'] . ' / ' . (int) $resumen['facturas']);
-        $this->filaResumen($pdf, 'Operación gravada', 'S/ ' . number_format($resumen['subtotal'], 2));
-        $this->filaResumen($pdf, 'IGV recaudado', 'S/ ' . number_format($resumen['igv'], 2));
-        $this->filaResumen($pdf, 'Total vendido', 'S/ ' . number_format($resumen['total'], 2));
-        $this->filaResumen($pdf, 'Ticket promedio', 'S/ ' . number_format($resumen['ticket_promedio'], 2));
+        $this->filaResumen($pdf, 'Operación gravada', $sim . number_format($resumen['subtotal'], 2));
+        $this->filaResumen($pdf, 'IGV recaudado', $sim . number_format($resumen['igv'], 2));
+        $this->filaResumen($pdf, 'Total vendido', $sim . number_format($resumen['total'], 2));
+        $this->filaResumen($pdf, 'Ticket promedio', $sim . number_format($resumen['ticket_promedio'], 2));
 
         $pdf->Ln(4);
 
@@ -132,8 +133,8 @@ class ExportarController
             foreach ($datos['porCajero'] as $fila) {
                 $pdf->Cell(80, 6, $this->texto($fila['cajero']), 'B', 0, 'L');
                 $pdf->Cell(35, 6, (int) $fila['tickets'], 'B', 0, 'C');
-                $pdf->Cell(35, 6, 'S/ ' . number_format($fila['importe'], 2), 'B', 0, 'R');
-                $pdf->Cell(36, 6, 'S/ ' . number_format($fila['ticket_promedio'], 2), 'B', 1, 'R');
+                $pdf->Cell(35, 6, $sim . number_format($fila['importe'], 2), 'B', 0, 'R');
+                $pdf->Cell(36, 6, $sim . number_format($fila['ticket_promedio'], 2), 'B', 1, 'R');
             }
 
             $pdf->Ln(4);
@@ -150,7 +151,7 @@ class ExportarController
             foreach ($datos['porCategoria'] as $fila) {
                 $pdf->Cell(100, 6, $this->texto($fila['categoria']), 'B', 0, 'L');
                 $pdf->Cell(40, 6, (int) $fila['unidades'], 'B', 0, 'C');
-                $pdf->Cell(46, 6, 'S/ ' . number_format($fila['importe'], 2), 'B', 1, 'R');
+                $pdf->Cell(46, 6, $sim . number_format($fila['importe'], 2), 'B', 1, 'R');
             }
 
             $pdf->Ln(4);
@@ -169,7 +170,7 @@ class ExportarController
                 $pdf->Cell(10, 6, $indice + 1, 'B', 0, 'C');
                 $pdf->Cell(90, 6, $this->texto($this->recortar($fila['nombre'], 45)), 'B', 0, 'L');
                 $pdf->Cell(40, 6, (int) $fila['unidades'], 'B', 0, 'C');
-                $pdf->Cell(46, 6, 'S/ ' . number_format($fila['importe'], 2), 'B', 1, 'R');
+                $pdf->Cell(46, 6, $sim . number_format($fila['importe'], 2), 'B', 1, 'R');
             }
 
             $pdf->Ln(4);
